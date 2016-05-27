@@ -5,6 +5,8 @@ lang=$2
 raw=$3
 clean=$4
 
+file=`basename $raw`
+
 echo convert raw corpus to tokenized, true-cased, clean text
 
 if [ ! $# -eq 4 ]; then
@@ -22,16 +24,16 @@ mkdir -p $tmp
 $moses/scripts/tokenizer/tokenizer.perl -l $lang \
     -threads 16                                          \
     < $raw                                               \
-    > $tmp/${raw}.tokenized
+    > $tmp/${file}.tokenized
 
 if [ ! -f ~/corpus/truecase-model.$lang ]; then
 $moses/scripts/recaser/train-truecaser.perl \
     --model $tmp/truecase-model.$lang --corpus     \
-    $tmp/${raw}.tokenized
+    $tmp/${file}.tokenized
 
 fi
 
 $moses/scripts/recaser/truecase.perl \
     --model $tmp/truecase-model.$lang    \
-    < $tmp/${raw}.tokenized                 \
+    < $tmp/${file}.tokenized                 \
     > $clean

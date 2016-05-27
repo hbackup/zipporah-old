@@ -11,20 +11,54 @@ function check_equal_lines {
 config=$1
 . $config
 
-echo -n "running step " && grep "^#1:" steps.info
+if [ -f $working/$id/step-1/.done ]; then
+  echo Already finished
+  exit
+fi
 
-echo processing good corpus
-if [ -f $clean_stem_good.$input ] && [ -f $clean_stem_good.$output ]; then
-  check_equal_lines $clean_stem_good.$input $clean_stem_good.$output
+echo -n "[step-1] starts," && grep "^#1:" steps.info | awk -F ':' '{print $2}'
+
+echo "[step-1] processing ref corpus"
+if [ -f $clean_stem_ref.$input ] && [ -f $clean_stem_ref.$output ]; then
+  check_equal_lines $clean_stem_ref.$input $clean_stem_ref.$output
 else
-  check_equal_lines $raw_stem_good.$input $raw_stem_good.$output
+  check_equal_lines $raw_stem_ref.$input $raw_stem_ref.$output
   for i in $input $output; do
-    $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_good.$i $working/$id/step-1/good.clean.$i > $working/$id/LOGs/raw-to-clean-good.log &
+    $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_ref.$i $working/$id/step-1/ref.clean.$i > $working/$id/LOGs/raw-to-clean-ref.log &
   done
   wait
-fi 
+fi
 
-echo processing bad corpus
+for c in ref; do
+  $moses/scripts/training/clean-corpus-n.perl \                           
+    $working/$id/step-1/$c.clean $input $output \                                                 
+    $working/$id/step-1/$c.short.clean 1 80
+done
+
+echo "[step-1] processing good corpus"
+if [ "$clean_stem_good" != "$clean_stem_ref" ]; then
+  if [ -f $clean_stem_good.$input ] && [ -f $clean_stem_good.$output ]; then
+    check_equal_lines $clean_stem_good.$input $clean_stem_good.$output
+  else
+    check_equal_lines $raw_stem_good.$input $raw_stem_good.$output
+    for i in $input $output; do
+      $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_good.$i $working/$id/step-1/good.clean.$i > $working/$id/LOGs/raw-to-clean-good.log &
+    done
+    wait
+  fi 
+else
+  for i in $input $output; do
+    ln -s $working/$id/step-1/ref.clean.$i $working/$id/step-1/good.clean.$i
+  done
+fi
+
+for c in good; do
+  $moses/scripts/training/clean-corpus-n.perl \                           
+    $working/$id/step-1/$c.clean $input $output \                                                 
+    $working/$id/step-1/$c.short.clean 1 80
+done
+
+echo "[step-1] processing bad corpus"
 if [ -f $clean_stem_bad.$input ] && [ -f $clean_stem_bad.$output ]; then
   check_equal_lines $clean_stem_bad.$input $clean_stem_bad.$output
 else
@@ -35,29 +69,11 @@ else
   wait
 fi
 
-echo processing ref corpus
-if [ "$clean_stem_good" != "$clean_stem_ref" ]; then
-  if [ -f $clean_stem_ref.$input ] && [ -f $clean_stem_ref.$output ]; then
-    check_equal_lines $clean_stem_ref.$input $clean_stem_ref.$output
-  else
-    check_equal_lines $raw_stem_ref.$input $raw_stem_ref.$output
-    for i in $input $output; do
-      $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_ref.$i $working/$id/step-1/ref.clean.$i > $working/$id/LOGs/raw-to-clean-ref.log &
-    done
-    wait
-  fi
-else
-  for i in $input $output; do
-    ln $working/$id/step-1/good.clean.$i $working/$id/step-1/ref.clean.$i
-  done
-fi
-
-echo eliminate long sentences
-for c in good bad ref; do
+for c in bad; do
   $moses/scripts/training/clean-corpus-n.perl \                           
-    $c.clean $input $output \                                                 
-    $c.short.clean 1 80
+    $working/$id/step-1/$c.clean $input $output \                                                 
+    $working/$id/step-1/$c.short.clean 1 80
 done
 
 touch $working/$id/step-1/.done
-echo step-1 finished
+echo "[step-1] finished."

@@ -16,11 +16,11 @@ fi
 
 . $config
 
-set -v
+#set -v
 
 tmp=$working/$id/step-1/tmp
 mkdir -p $tmp
-
+(
 $moses/scripts/tokenizer/tokenizer.perl -l $lang \
     -threads 16                                          \
     < $raw                                               \
@@ -37,3 +37,4 @@ $moses/scripts/recaser/truecase.perl \
     --model $tmp/truecase-model.$lang    \
     < $tmp/${file}.tokenized                 \
     > $clean
+) 2>&1 

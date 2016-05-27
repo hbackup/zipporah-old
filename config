@@ -60,10 +60,8 @@ non_word_agree=true
 #==============================================================================
 num_gauss=8
 
-
 #==============================================================================
-# Below here is automatic scripts. Do not change anything unless you know what
-# you are doing
+# Below here is automatic scripts. Do not change anything
 #==============================================================================
 if [ "$e2f" != "" ] && [ "$f2e" != "" ]; then
   raw_stem_ref=

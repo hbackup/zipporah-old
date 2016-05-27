@@ -1,0 +1,6 @@
+#1: corpus normalization
+#2: train MT system on ref data
+#3: extract various features
+#4: train GMMs
+#5: score sentence pairs with GMM
+#6: make selections

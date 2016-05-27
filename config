@@ -32,6 +32,12 @@ output_percent=0.1
 lang_pair=${input}-${output}
 
 #==============================================================================
+# exsiting translation model path
+# if this is set, we will not process the *ref corpus
+#==============================================================================
+trained_MT_path=
+
+#==============================================================================
 # features to use
 #==============================================================================
 bow_feat=true # probably the most important feature

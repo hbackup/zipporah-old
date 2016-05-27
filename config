@@ -20,8 +20,8 @@ clust=/export/a11/hxu/tools/cluster-3.6.7/clust
 # bad corpus - the corpus which we try to select a good subset
 # ref and good corpus could be the same 
 #==============================================================================
-input_lang=fr
-output_lang=en
+input=fr
+output=en
 raw_stem_good=
 clean_stem_good=
 raw_stem_ref=
@@ -29,7 +29,7 @@ clean_stem_ref=
 raw_stem_bad=
 
 output_percent=0.1
-lang_pair=${input_lang}-${output_lang}
+lang_pair=${input}-${output}
 
 #==============================================================================
 # features to use

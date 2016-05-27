@@ -12,7 +12,7 @@ mkdir -p $working/
 
 id=`ls $working | sort -nr | head -n 1`
 if [ "$id" == "" ]; then
-  id=-1
+  id=0
 fi
 
 id=$[$id+1]

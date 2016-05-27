@@ -30,9 +30,9 @@ else
 fi
 
 for c in ref; do
-  $moses/scripts/training/clean-corpus-n.perl \                           
-    $working/$id/step-1/$c.clean $input $output \                                                 
-    $working/$id/step-1/$c.short.clean 1 80
+  $moses/scripts/training/clean-corpus-n.perl \
+    $working/$id/step-1/$c.clean $input $output \
+    $working/$id/step-1/$c.clean.short 1 80
 done
 
 echo "[step-1] processing good corpus"
@@ -53,9 +53,9 @@ else
 fi
 
 for c in good; do
-  $moses/scripts/training/clean-corpus-n.perl \                           
-    $working/$id/step-1/$c.clean $input $output \                                                 
-    $working/$id/step-1/$c.short.clean 1 80
+  $moses/scripts/training/clean-corpus-n.perl \
+    $working/$id/step-1/$c.clean $input $output \
+    $working/$id/step-1/$c.clean.short 1 80
 done
 
 echo "[step-1] processing bad corpus"
@@ -70,9 +70,9 @@ else
 fi
 
 for c in bad; do
-  $moses/scripts/training/clean-corpus-n.perl \                           
-    $working/$id/step-1/$c.clean $input $output \                                                 
-    $working/$id/step-1/$c.short.clean 1 80
+  $moses/scripts/training/clean-corpus-n.perl \
+    $working/$id/step-1/$c.clean $input $output \
+    $working/$id/step-1/$c.clean.short 1 80
 done
 
 touch $working/$id/step-1/.done

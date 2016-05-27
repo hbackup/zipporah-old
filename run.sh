@@ -8,5 +8,5 @@ config=$1
 
 . $config
 
-$ROOT/steps/0.sh
+$ROOT/scripts/1.sh $config
 

@@ -17,5 +17,5 @@ while [ ! -f $working/$id/step-1/ref.clean.short.$input ] || [ ! -f $working/$id
 done
 
 
-~/mosesdecoder/scripts/ems/experiment.perl -config $working/$id/mt.config -cluster -exec > $working/$id/step-2/LOGs/2.mt.log
+~/mosesdecoder/scripts/ems/experiment.perl -config $working/$id/mt.config -cluster -exec > $working/$id/LOGs/2.mt.log
 echo "[step-2] finished."

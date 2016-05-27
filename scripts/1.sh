@@ -36,7 +36,7 @@ for c in ref; do
 done
 
 echo "[step-1] processing good corpus"
-if [ "$clean_stem_good" != "$clean_stem_ref" ]; then
+if [ "$clean_stem_good" != "$clean_stem_ref" ] || [ "$raw_stem_good" != "$raw_stem_ref" ]; then
   if [ -f $clean_stem_good.$input ] && [ -f $clean_stem_good.$output ]; then
     check_equal_lines $clean_stem_good.$input $clean_stem_good.$output
   else

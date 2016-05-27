@@ -1,10 +1,9 @@
-#!/bin/bash
-
 # this file has location variables used throughout the system
 
 # locations
 #==============================================================================
 working=/export/a11/hxu/automatic/working
+ROOT=/export/a11/hxu/automatic/data-selection
 #==============================================================================
 
 # binaries

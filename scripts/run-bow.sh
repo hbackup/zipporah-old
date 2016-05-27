@@ -1,14 +1,16 @@
 #!/bin/bash
 
-dict=$1
-source=$2
-target=$3
+config=$1
+dict=$2
+source=$3
+target=$4
 
+file=`basename $dict`
 set -v
 
-cat $dict | awk '$3>0.1{print}' > $dict.short
+cat $dict | awk -v thresh=$bow_thresh '$3>thresh{print}' > $working/$id/step-3/bow/$file.short
 
 #~/data_selection/tools/bow-translation $dict.short source
 
-cat $source | ~/data_selection/tools/bow-translation $dict.short - | python tools/unigram-similarity-soft.py - $target
+cat $source | $ROOT/tools/bow-translation $working/$id/step-3/bow/$file.short - | python $ROOT/scripts/unigram-similarity-soft.py - $target
 

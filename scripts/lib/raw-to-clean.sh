@@ -1,34 +1,37 @@
 #!/bin/bash
 
 config=$1
-lang=$2  # en or fr for now
+lang=$2
 raw=$3
 clean=$4
 
 echo convert raw corpus to tokenized, true-cased, clean text
 
-if [ ! $# -eq 3 ]; then
-  echo $0 lang raw clean
+if [ ! $# -eq 4 ]; then
+  echo $0 config lang raw clean
   exit 1
 fi
 
+. $config
+
 set -v
 
-mkdir -p /tmp/hxu/raw_tmp/
+tmp=$working/$id/step-1/tmp
+mkdir -p $tmp
 
-~/tools/mosesdecoder/scripts/tokenizer/tokenizer.perl -l $lang \
+$moses/scripts/tokenizer/tokenizer.perl -l $lang \
     -threads 16                                          \
     < $raw                                               \
-    > /tmp/hxu/raw_tmp/${raw}.tokenized
+    > $tmp/${raw}.tokenized
 
 if [ ! -f ~/corpus/truecase-model.$lang ]; then
-~/tools/mosesdecoder/scripts/recaser/train-truecaser.perl \
-    --model /tmp/hxu/raw_tmp/truecase-model.$lang --corpus     \
-    /tmp/hxu/raw_tmp/${raw}.tokenized
+$moses/scripts/recaser/train-truecaser.perl \
+    --model $tmp/truecase-model.$lang --corpus     \
+    $tmp/${raw}.tokenized
 
 fi
 
-~/tools/mosesdecoder/scripts/recaser/truecase.perl \
-    --model /tmp/hxu/raw_tmp/truecase-model.$lang    \
-    < /tmp/hxu/raw_tmp/${raw}.tokenized                 \
+$moses/scripts/recaser/truecase.perl \
+    --model $tmp/truecase-model.$lang    \
+    < $tmp/${raw}.tokenized                 \
     > $clean

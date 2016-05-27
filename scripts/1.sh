@@ -18,7 +18,7 @@ if [ -f $clean_stem_good.$input ] && [ -f $clean_stem_good.$output ]; then
 else
   check_equal_lines $raw_stem_good.$input $raw_stem_good.$output
   for i in $input $output; do
-    $ROOT/scripts/lib/raw-to-clean.sh $config $raw_stem_good.$input $raw_stem_good.$output
+    $ROOT/scripts/lib/raw-to-clean.sh $config $raw_stem_good.$i $working/$id/step-1/good.clean.$i
   done
 fi
 

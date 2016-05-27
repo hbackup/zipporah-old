@@ -15,14 +15,11 @@ mkdir -p $working/$id/step-3/tagged/
 if [ $pos_feat = true ]; then
   echo "[step-3] running the Stanford tagger to generate PoS features"
 
-  $ROOT/scripts/tag-pos.sh $config $train.$input $working/$id/step-3/tagged/$train.$input
+  echo $ROOT/scripts/tag-pos.sh $config $train $input $working/$id/step-3/tagged/good.$input
+  $ROOT/scripts/tag-pos.sh $config $train $input $working/$id/step-3/tagged/good.$input
+  $ROOT/scripts/tag-pos.sh $config $train $output $working/$id/step-3/tagged/good.$output
 
-  exit
-  $ROOT/scripts/tag-pos.sh $config $train.$output $working/$id/step-3/tagged/$train.$output
-
-  $ROOT/scripts/tag-pos.sh $config $test.$input $working/$id/step-3/tagged/$test.$input
-  $ROOT/scripts/tag-pos.sh $config $test.$output $working/$id/step-3/tagged/$test.$output
-
-
+  $ROOT/scripts/tag-pos.sh $config $test $input $working/$id/step-3/tagged/bad.$input
+  $ROOT/scripts/tag-pos.sh $config $test $output $working/$id/step-3/tagged/bad.$output
 
 fi

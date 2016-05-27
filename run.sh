@@ -30,3 +30,5 @@ sleep 3m
 $ROOT/scripts/2.sh $working/$id/config
 
 wait
+
+$ROOT/scripts/3.sh $working/$id/config

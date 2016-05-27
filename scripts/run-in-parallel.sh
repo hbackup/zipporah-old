@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -ne 5 ]; then
-  echo $0 command input-file output-file num-jobs tmp-folder
+if [ $# -ne 6 ]; then
+  echo $0 command input-file output-file num-jobs tmp-folder ROOT
   exit 1
 fi
 
@@ -10,6 +10,7 @@ input=$2
 output=$3
 nj=$4
 tmpfolder=$5
+ROOT=$6
 
 mkdir -p $tmpfolder
 split -d -n l/$nj $input $tmpfolder/s.
@@ -25,6 +26,10 @@ done
 
 $ROOT/scripts/queue.pl JOB=1:$nj $tmpfolder/log.JOB $command $tmpfolder/s.JOB $tmpfolder/out.JOB
 
+if [ -f $output ]; then
+  rm $output
+fi
+
 for i in `seq 1 $[$nj]`; do
   cat $tmpfolder/out.$i >> $output
 done
@@ -33,6 +38,6 @@ n1=`wc -l $input | awk '{print $1}'`
 n2=`wc -l $output | awk '{print $1}'`
 
 if [ $n1 -ne $n2 ]; then
-  echo Warning: input and output have different number of lines
+  echo Warning: input and output have different number of lines, $n1 vs $n2
   exit -1
 fi

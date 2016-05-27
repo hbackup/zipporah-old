@@ -12,6 +12,9 @@ nj=$4
 tmpfolder=$5
 ROOT=$6
 
+file=`basename $command | sed "s=\..*$==g"`
+echo log file should be called $file.log
+
 mkdir -p $tmpfolder
 split -d -n l/$nj $input $tmpfolder/s.
 

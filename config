@@ -48,22 +48,20 @@ bow_thresh=0.05 # only pick entries in lex table when prob >= thresh
 pos_feat=true # need stanford tagger
 pos_num=10 # only pick top pos_num most common tags for each side:w
 pos_sample=200 
-pos_jobs=40
+pos_jobs=80
 
 length_feat=true
 length_ratio=true
 
-non_word_agree_feat=true
+non_word_agree=true
 
 #==============================================================================
 # GMM
 #==============================================================================
 num_gauss=8
 
-
 #==============================================================================
-# Below here is automatic scripts. Do not change anything unless you know what
-# you are doing
+# Below here is automatic scripts. Do not change anything
 #==============================================================================
 if [ "$e2f" != "" ] && [ "$f2e" != "" ]; then
   raw_stem_ref=

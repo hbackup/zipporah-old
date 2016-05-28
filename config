@@ -10,7 +10,7 @@ ROOT=/export/a11/hxu/automatic/data-selection
 #==============================================================================
 moses=/export/a11/hxu/mosesdecoder
 tagger=/export/a11/hxu/tools/stanford-postagger-full-2015-12-09
-clust=/export/a11/hxu/tools/cluster-3.6.7/clust
+clust=/export/a11/hxu/tools/cluster-3.6.7/
 
 #==============================================================================
 # corpus

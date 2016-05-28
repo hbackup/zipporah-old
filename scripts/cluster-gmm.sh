@@ -31,4 +31,4 @@ EOF
 
 #echo writing to $out_params $3
 
-$clust $num_gauss $savefolder/infofile $3 full
+$clust/clust $num_gauss $savefolder/infofile $3 full

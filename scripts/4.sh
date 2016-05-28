@@ -25,7 +25,8 @@ for i in good bad; do
   $ROOT/tools/get-lines $working/$id/step-4/feats/$i.index $feats/good.feats > $working/$id/step-4/feats/$i.feats
 
   echo "[step-4] clustering GMM for $i data"
-  $ROOT/scripts/cluster-gmm.sh $config $working/$id/step-4/feats/$i.feats $num_gauss $working/$id/step-4/gmm-file/params $working/$id/step-4/gmm-file
+  mkdir -p $working/$id/step-4/gmm-file/$i
+  $ROOT/scripts/cluster-gmm.sh $config $working/$id/step-4/feats/$i.feats $num_gauss $working/$id/step-4/gmm-file/$i.params $working/$id/step-4/gmm-file/$i
 
 done
 

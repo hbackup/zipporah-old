@@ -6,6 +6,7 @@ num_gauss=$3
 out_param=$4
 savefolder=$5
 
+. $config
 
 if [ $# != 5 ]; then
   echo wrong number of parameters. require 5, see $#

@@ -29,4 +29,5 @@ $m
 $data_file $n
 EOF
 
-$clust/clust $num_gauss $savefolder/infofile $out_params full
+#echo $clust/clust $num_gauss $savefolder/infofile $out_param full
+$clust/clust $num_gauss $savefolder/infofile $out_param full

@@ -75,3 +75,5 @@ fi
 if [ "$num_gauss" == "" ]; then
   num_gauss=8
 fi
+
+set -e

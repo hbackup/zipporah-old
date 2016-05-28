@@ -6,6 +6,9 @@ source=$3
 target=$4
 
 file=`basename $dict`
+
+. $config
+
 set -v
 
 cat $dict | awk -v thresh=$bow_thresh '$3>thresh{print}' > $working/$id/step-3/bow/$file.short

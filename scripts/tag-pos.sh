@@ -19,9 +19,6 @@ case "$lang" in
   ;;
 esac
 
-#TODO
-pos_jobs=80
-
 if [ "$lang" != "de" ]; then
   $ROOT/scripts/run-in-parallel.sh "$tagger/stanford-postagger.sh $model" $stem.$lang $outputfile $pos_jobs $working/$id/step-3/tagged/tmp/$file.$lang/ $ROOT
 else

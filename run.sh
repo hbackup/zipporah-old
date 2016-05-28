@@ -31,3 +31,4 @@ wait
 $ROOT/scripts/3.sh $working/$id/config
 $ROOT/scripts/4.sh $working/$id/config
 $ROOT/scripts/5.sh $working/$id/config
+$ROOT/scripts/6.sh $working/$id/config

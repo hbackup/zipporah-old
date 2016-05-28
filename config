@@ -59,6 +59,7 @@ non_word_agree=true
 # GMM
 #==============================================================================
 num_gauss=8
+gmm_sample_size=50000
 
 #==============================================================================
 # Below here is automatic scripts. Do not change anything
@@ -69,4 +70,8 @@ if [ "$e2f" != "" ] && [ "$f2e" != "" ]; then
 else
   e2f=$working/$id/step-2/MT/model/lex.1.e2f
   f2e=$working/$id/step-2/MT/model/lex.1.f2e
+fi
+
+if [ "$num_gauss" == "" ]; then
+  num_gauss=8
 fi

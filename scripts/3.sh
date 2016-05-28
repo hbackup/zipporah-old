@@ -102,3 +102,5 @@ paste $good_string > $feats/good.feats
 paste $bad_string > $feats/bad.feats
 
 touch $working/$id/step-3/.done
+
+echo "[step-3] finished"

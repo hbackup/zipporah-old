@@ -29,6 +29,4 @@ $m
 $data_file $n
 EOF
 
-#echo writing to $out_params $3
-
-$clust/clust $num_gauss $savefolder/infofile $3 full
+$clust/clust $num_gauss $savefolder/infofile $out_params full

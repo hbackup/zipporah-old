@@ -17,5 +17,6 @@ echo "[step-4] score on good GMM"
 $clust/classify $working/$id/step-4/gmm-file/good.params $working/$id/step-3/feats/bad.feats > $working/$id/step-5/score.good
 $clust/classify $working/$id/step-4/gmm-file/bad.params $working/$id/step-3/feats/bad.feats > $working/$id/step-5/score.bad
 
+touch $working/$id/step-5/.done
 
 echo "[step-5] finished"

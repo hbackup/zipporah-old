@@ -24,11 +24,13 @@ input=de
 output=en
 raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.de-en
 #clean_stem_good=
-raw_stem_ref=/export/a11/hxu/sample_corpus/training/news-commentary-v8.de-en
+#raw_stem_ref=/export/a11/hxu/sample_corpus/training/news-commentary-v8.de-en
+raw_stem_ref=$raw_stem_good
+
 #clean_stem_ref=
 raw_stem_bad=/export/a11/hxu/corpus/de-en/site-crawl-25
 
-output_percent=0.1
+output_percent=0.05
 lang_pair=${input}-${output}
 
 #==============================================================================
@@ -47,7 +49,7 @@ bow_thresh=0.05 # only pick entries in lex table when prob >= thresh
 
 pos_feat=true # need stanford tagger
 pos_num=10 # only pick top pos_num most common tags for each side:w
-pos_sample=200 
+pos_sample=2000 
 pos_jobs=80
 
 length_feat=true

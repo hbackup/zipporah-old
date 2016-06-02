@@ -11,6 +11,8 @@ file=`basename $dict`
 
 set -v
 
+mkdir -p $working/$id/step-3/bow
+
 cat $dict | awk -v thresh=$bow_thresh '$3>thresh{print}' > $working/$id/step-3/bow/$file.short
 
 #~/data_selection/tools/bow-translation $dict.short source

@@ -95,9 +95,11 @@ void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
       cout << iter->first << " " << iter->second << " ";
     }
     cout << endl;
+    /*
     if (lines_processed++ % 1000 == 999) {
       cerr << "processing line: " << lines_processed << endl;
     }
+    //*/
   }
 }
 

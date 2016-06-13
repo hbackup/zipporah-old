@@ -20,29 +20,9 @@ feats=$working/$id/step-3/feats
 good_string=
 bad_string=
 
-if [ $bow_feat = true ] && [ ! -f $working/$id/step-3/feats/bad.bow.e2f ]; then
-  $ROOT/scripts/run-bow.sh $config $f2e $train.$input $train.$output > $working/$id/step-3/feats/good.bow.f2e
-  $ROOT/scripts/run-bow.sh $config $e2f $train.$output $train.$input > $working/$id/step-3/feats/good.bow.e2f
-
-  $ROOT/scripts/run-bow.sh $config $f2e $test.$input $train.$output > $working/$id/step-3/feats/bad.bow.f2e
-  $ROOT/scripts/run-bow.sh $config $e2f $test.$output $train.$input > $working/$id/step-3/feats/bad.bow.e2f
-fi
-
-if [ ! -f $feats/bad.length.ratio ]; then
-  cat $train.$input | awk '{print NF}' > $feats/good.$input.length
-  cat $train.$output | awk '{print NF}' > $feats/good.$output.length
-
-  cat $test.$input | awk '{print NF}' > $feats/bad.$input.length
-  cat $test.$output | awk '{print NF}' > $feats/bad.$output.length
-
-  for i in good bad; do
-    paste $feats/$i.$input.length $feats/$i.$input.length | awk '{print ($1+0.1)/($2+0.1)}' > $feats/$i.length.ratio
-  done
-fi
-
 if [ $pos_feat = true ] && [ ! -f $working/$id/step-3/feats/bad.pos ]; then
   mkdir -p $working/$id/step-3/tagged/
-  echo "[step-3] running the Stanford tagger to generate PoS features"
+  echo "[step-3] running the tagger to generate PoS features"
 
   $ROOT/scripts/tag-pos.sh $config $train $input $working/$id/step-3/tagged/good.$input
   $ROOT/scripts/tag-pos.sh $config $train $output $working/$id/step-3/tagged/good.$output
@@ -64,6 +44,26 @@ if [ $pos_feat = true ] && [ ! -f $working/$id/step-3/feats/bad.pos ]; then
 
   paste $working/$id/step-3/tagged/good.$input.pos.count.ratio $working/$id/step-3/tagged/good.$output.pos.count.ratio > $working/$id/step-3/feats/good.pos
   paste $working/$id/step-3/tagged/bad.$input.pos.count.ratio $working/$id/step-3/tagged/bad.$output.pos.count.ratio > $working/$id/step-3/feats/bad.pos
+fi
+
+if [ $bow_feat = true ] && [ ! -f $working/$id/step-3/feats/bad.bow.e2f ]; then
+  $ROOT/scripts/run-bow.sh $config $f2e $train.$input $train.$output > $working/$id/step-3/feats/good.bow.f2e
+  $ROOT/scripts/run-bow.sh $config $e2f $train.$output $train.$input > $working/$id/step-3/feats/good.bow.e2f
+
+  $ROOT/scripts/run-bow.sh $config $f2e $test.$input $train.$output > $working/$id/step-3/feats/bad.bow.f2e
+  $ROOT/scripts/run-bow.sh $config $e2f $test.$output $train.$input > $working/$id/step-3/feats/bad.bow.e2f
+fi
+
+if [ ! -f $feats/bad.length.ratio ]; then
+  cat $train.$input | awk '{print NF}' > $feats/good.$input.length
+  cat $train.$output | awk '{print NF}' > $feats/good.$output.length
+
+  cat $test.$input | awk '{print NF}' > $feats/bad.$input.length
+  cat $test.$output | awk '{print NF}' > $feats/bad.$output.length
+
+  for i in good bad; do
+    paste $feats/$i.$input.length $feats/$i.$input.length | awk '{print ($1+0.1)/($2+0.1)}' > $feats/$i.length.ratio
+  done
 fi
 
 if [ $pos_feat = true ]; then

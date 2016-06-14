@@ -14,6 +14,8 @@ case "$lang" in
   ;;
   de) lang=german
   ;;
+  es) lang=spanish
+  ;;
 esac
 
 if [ ! -f $ROOT/external/cmd/tree-tagger-$lang ]; then

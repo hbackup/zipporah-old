@@ -11,6 +11,12 @@ case "$lang" in
   ;;
   de) lang=german
   ;;
+  ru) lang=russian
+  ;;
+  es) lang=spanish
+  ;;
+  it) lang=italian
+  ;;
 esac
 
 name=`basename $input`

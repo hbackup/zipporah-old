@@ -1,8 +1,11 @@
 #!/bin/bash
 
 config=$1
-input=$2
-lang=$3
+lang=$2
+inputfile=$3
+outputfile=$4
+
+. $config 
 
 case "$lang" in
   en) lang=english
@@ -19,8 +22,9 @@ case "$lang" in
   ;;
 esac
 
-name=`basename $input`
-cat $input | awk '{print "LINE_SPECIAL_SYM"NR": "$0}' > $working/$id/$name.pasted
+if [ ! -f $ROOT/external/cmd/tree-tagger-$lang ]; then
+  echo "Can't find model for $lang at $ROOT/external/cmd/tree-tagger-$lang" && exit
+fi
 
-cat $working/$id/$name.pasted | $ROOT/external/cmd/tree-tagger-$lang
+cat $inputfile | awk '{print "LINE_SPECIAL_SYM"NR": "$0}' | $ROOT/external/cmd/tree-tagger-$lang | python $ROOT/scripts/tree-tags-generate-tags.py > $outputfile
 

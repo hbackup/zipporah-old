@@ -12,7 +12,8 @@ nj=$4
 tmpfolder=$5
 ROOT=$6
 
-file=`basename $command | sed "s=\..*$==g"`
+c=`echo $command | awk '{print $1}'`
+file=`basename $c | sed "s=\..*$==g"`
 echo log file should be called $file.log
 
 mkdir -p $tmpfolder

@@ -42,7 +42,7 @@ fi
 
 if [ $pos_feat = true ] && [ ! -f $working/$id/step-3/feats/bad.pos ]; then
   mkdir -p $working/$id/step-3/tagged/
-  echo "[step-3] running the Stanford tagger to generate PoS features"
+  echo "[step-3] running the tagger to generate PoS features"
 
   $ROOT/scripts/tag-pos.sh $config $train $input $working/$id/step-3/tagged/good.$input
   $ROOT/scripts/tag-pos.sh $config $train $output $working/$id/step-3/tagged/good.$output

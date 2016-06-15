@@ -9,7 +9,7 @@ ROOT=/export/a11/hxu/automatic/data-selection
 # binaries
 #==============================================================================
 moses=/export/a11/hxu/mosesdecoder
-tagger=/export/a11/hxu/tools/stanford-postagger-full-2015-12-09
+tagger=/export/a11/hxu/automatic/data-selection/external
 clust=/export/a11/hxu/tools/cluster-3.6.7/
 
 #==============================================================================
@@ -20,15 +20,15 @@ clust=/export/a11/hxu/tools/cluster-3.6.7/
 # bad corpus - the corpus which we try to select a good subset
 # ref and good corpus could be the same 
 #==============================================================================
-input=de
+input=fr
 output=en
-raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.de-en
+raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.fr-en
 #clean_stem_good=
 #raw_stem_ref=/export/a11/hxu/sample_corpus/training/news-commentary-v8.de-en
 raw_stem_ref=$raw_stem_good
 
 #clean_stem_ref=
-raw_stem_bad=/export/a11/hxu/corpus/de-en/site-crawl-25
+raw_stem_bad=/export/a11/hxu/corpus/site-crawl-25
 
 output_percent=0.05
 lang_pair=${input}-${output}
@@ -37,8 +37,8 @@ lang_pair=${input}-${output}
 # exsiting translation model path
 # if this is set, we will not process the *ref corpus
 #==============================================================================
-f2e=
-e2f=
+f2e=/export/a11/hxu/automatic/working/3/step-2/MT/model/lex.1.f2e
+e2f=/export/a11/hxu/automatic/working/3/step-2/MT/model/lex.1.e2f 
 
 #==============================================================================
 # features to use

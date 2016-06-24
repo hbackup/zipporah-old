@@ -11,90 +11,73 @@ function check_equal_lines {
 config=$1
 . $config
 
-if [ -f $working/$id/step-1/.done ]; then
-  echo "[step-1] Already finished."
+if [ -f $working/$id/step-1/.done.$iter ]; then
+  echo "[iter-$iter] [step-1] Already finished."
   exit
 fi
 
-echo -n "[step-1] starts," && grep "^#1:" steps.info | awk -F ':' '{print $2}'
-
-echo "[step-1] processing good corpus"
-
 mkdir -p $working/$id/step-1
 
-if [[ $raw_stem_good =~ ^-?[0-9]+$ ]]; then
-  k=$raw_stem_good
-  n=`wc -l $raw_stem_bad.$input | awk '{print $1}'`
-  $ROOT/tools/get-rand-index $n $k > $working/$id/step-1/good-index
-  $ROOT/tools/get-lines $working/$id/step-1/good-index $raw_stem_bad.$input > $working/$id/step-1/good.$input
-  $ROOT/tools/get-lines $working/$id/step-1/good-index $raw_stem_bad.$output > $working/$id/step-1/good.$output
+echo -n "[iter-$iter] [step-1] starts," && grep "^#1:" steps.info | awk -F ':' '{print $2}'
 
-  raw_stem_good=$working/$id/step-1/good
-fi
-
-
-if [ "$clean_stem_good" != "$clean_stem_ref" ] || [ "$raw_stem_good" != "$raw_stem_ref" ]; then
-  if [ -f $clean_stem_good.$input ] && [ -f $clean_stem_good.$output ]; then
-    check_equal_lines $clean_stem_good.$input $clean_stem_good.$output
+if [ ! -f $working/$id/step-1/bad.clean.short.$input_lang ]; then
+  echo "[iter-$iter] [step-1] processing bad corpus"
+  if [ -f $clean_stem_bad.$input_lang ] && [ -f $clean_stem_bad.$output_lang ]; then
+    check_equal_lines $clean_stem_bad.$input_lang $clean_stem_bad.$output_lang
   else
-    check_equal_lines $raw_stem_good.$input $raw_stem_good.$output
-    for i in $input $output; do
-      $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_good.$i $working/$id/step-1/good.clean.$i > $working/$id/LOGs/raw-to-clean-good.log &
-    done
-    wait
-  fi 
-else
-  for i in $input $output; do
-    ln -s $working/$id/step-1/ref.clean.$i $working/$id/step-1/good.clean.$i 2>/dev/null
-  done
-fi
-
-for c in good; do
-  $moses/scripts/training/clean-corpus-n.perl \
-    $working/$id/step-1/$c.clean $input $output \
-    $working/$id/step-1/$c.clean.short 1 80
-done
-
-if [[ $raw_stem_ref =~ ^-?[0-9]+$ ]]; then
-  raw_stem_ref=$raw_stem_good
-fi
-
-if [ "$clean_stem_ref" != "" ] || [ "$raw_stem_ref" != "" ]; then
-  echo "[step-1] processing ref corpus"
-  if [ -f $clean_stem_ref.$input ] && [ -f $clean_stem_ref.$output ]; then
-    check_equal_lines $clean_stem_ref.$input $clean_stem_ref.$output
-  else
-    check_equal_lines $raw_stem_ref.$input $raw_stem_ref.$output
-    for i in $input $output; do
-      $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_ref.$i $working/$id/step-1/ref.clean.$i > $working/$id/LOGs/raw-to-clean-ref.log &
+    check_equal_lines $raw_stem_bad.$input_lang $raw_stem_bad.$output_lang
+    for i in $input_lang $output_lang; do
+      $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_bad.$i $working/$id/step-1/bad.clean.$i > $working/$id/LOGs/raw-to-clean-bad.log &
     done
     wait
   fi
 
-  for c in ref; do
+  for c in bad; do
     $moses/scripts/training/clean-corpus-n.perl \
-      $working/$id/step-1/$c.clean $input $output \
+      $working/$id/step-1/$c.clean $input_lang $output_lang \
       $working/$id/step-1/$c.clean.short 1 80
   done
 fi
 
+echo "[iter-$iter] [step-1] processing good corpus"
 
-echo "[step-1] processing bad corpus"
-if [ -f $clean_stem_bad.$input ] && [ -f $clean_stem_bad.$output ]; then
-  check_equal_lines $clean_stem_bad.$input $clean_stem_bad.$output
-else
-  check_equal_lines $raw_stem_bad.$input $raw_stem_bad.$output
-  for i in $input $output; do
-    $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_bad.$i $working/$id/step-1/bad.clean.$i > $working/$id/LOGs/raw-to-clean-bad.log &
-  done
-  wait
+if [[ $raw_stem_good =~ ^[0-9]+$ ]]; then
+  mkdir -p $working/$id/step-1/iter-1
+  k=$raw_stem_good
+  n=`wc -l $working/$id/step-1/$c.clean.short.$input_lang | awk '{print $1}'`
+
+  if [ $iter -eq 1 ]; then
+    echo "[iter-1] [step-1] randomly chooose subset as good data"
+    $ROOT/tools/get-rand-index $n $k > $working/$id/step-1/iter-1/good-index-random
+    $ROOT/tools/get-lines $working/$id/step-1/iter-1/good-index-random $working/$id/step-1/$c.clean.short.$input_lang > $working/$id/step-1/iter-1/good.clean.$input_lang
+    $ROOT/tools/get-lines $working/$id/step-1/iter-1/good-index-random $working/$id/step-1/$c.clean.short.$output_lang > $working/$id/step-1/iter-1/good.clean.$output_lang
+  else
+    echo "[iter-1] [step-1] pick best data from last iteration"
+    head -n $k $working/$id/step-6/iter-$[$iter-1]/bad/sorted | awk '{print $2}' > $working/$id/step-1/iter-$iter/good-index
+    $ROOT/tools/get-lines $working/$id/step-1/iter-$iter/good-index-random $working/$id/step-1/$c.clean.short.$input_lang > $working/$id/step-1/iter-$iter/good.clean.$input_lang
+    $ROOT/tools/get-lines $working/$id/step-1/iter-$iter/good-index-random $working/$id/step-1/$c.clean.short.$output_lang > $working/$id/step-1/iter-$iter/good.clean.$output_lang
+  fi
+  clean_stem_good=$working/$id/step-1/iter-$iter/good.clean
+
+# no need to check anything now
+  exit
 fi
 
-for c in bad; do
+if [ -f $clean_stem_good.$input_lang ] && [ -f $clean_stem_good.$output_lang ]; then
+  check_equal_lines $clean_stem_good.$input_lang $clean_stem_good.$output_lang
+else
+  check_equal_lines $raw_stem_good.$input_lang $raw_stem_good.$output_lang
+  for i in $input_lang $output_lang; do
+    $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_good.$i $working/$id/step-1/good.clean.$i > $working/$id/LOGs/raw-to-clean-good.log &
+  done
+  wait
+fi 
+
+for c in good; do
   $moses/scripts/training/clean-corpus-n.perl \
-    $working/$id/step-1/$c.clean $input $output \
+    $working/$id/step-1/$c.clean $input_lang $output_lang \
     $working/$id/step-1/$c.clean.short 1 80
 done
 
-touch $working/$id/step-1/.done
-echo "[step-1] finished."
+touch $working/$id/step-1/.done.$iter
+echo "[iter-$iter] [step-1] finished."

@@ -14,24 +14,24 @@ clust=/export/a11/hxu/tools/cluster-3.6.7/
 
 #==============================================================================
 # corpus
-# we have 3 set of corpus needed. 
-# ref corpus - to train a MT system and we use its lex tables
-# good corpus - to extract features and train a GMM
-# bad corpus - the corpus which we try to select a good subset
-# ref and good corpus could be the same 
-#==============================================================================
-input=fr
-output=en
-raw_stem_good=1000000
-#clean_stem_good=
-#raw_stem_ref=/export/a11/hxu/sample_corpus/training/news-commentary-v8.de-en
-raw_stem_ref=$raw_stem_good
+# good corpus - to extract features and train a GMM;
+# if it's a number then select a subset of that size from bad corpus
 
-#clean_stem_ref=
+# bad corpus - the corpus which we try to select a good subset
+#==============================================================================
+input_lang=fr
+output_lang=en
+raw_stem_good=1000000
+
+# if good corpus is a subset of bad corpus then in the first iteration we choose
+# a random subset and later pick the top-scored ones from the previous iteration
+num_iters=2
+#clean_stem_good=
+
 raw_stem_bad=/export/a11/hxu/corpus/site-crawl-25
 
-output_percent=0.05
-lang_pair=${input}-${output}
+output_percent=0.05 # as in number of lines
+lang_pair=${input_lang}-${output_lang}
 
 #==============================================================================
 # exsiting translation model path
@@ -47,8 +47,8 @@ bow_feat=true # probably the most important feature
 bow_thresh=0.05 # only pick entries in lex table when prob >= thresh
                 # 1 means pick most likely translation
 
-pos_feat=true # need stanford tagger
-pos_num=10 # only pick top pos_num most common tags for each side:w
+pos_feat=true # need tagger
+pos_num=10 # only pick top pos_num most common tags for each language
 pos_sample=2000 
 pos_jobs=80
 
@@ -70,10 +70,14 @@ if [ "$e2f" != "" ] && [ "$f2e" != "" ]; then
   raw_stem_ref=
   clean_stem_ref=
 else
-  e2f=$working/$id/step-2/MT/model/lex.1.e2f
-  f2e=$working/$id/step-2/MT/model/lex.1.f2e
+  e2f=$working/$id/step-2/MT/iter-$iter/model/lex.1.e2f
+  f2e=$working/$id/step-2/MT/iter-$iter/model/lex.1.f2e
 fi
 
+if ! [[ $raw_stem_good =~ ^[0-9]+$ ]]; then
+  num_iter=1
+fi
+  
 if [ "$num_gauss" == "" ]; then
   num_gauss=8
 fi

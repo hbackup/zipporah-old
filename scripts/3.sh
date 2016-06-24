@@ -4,28 +4,29 @@ config=$1
 
 . $config
 
-if [ -f $working/$id/step-3/.done ]; then
+if [ -f $working/$id/step-3/.done.$iter ]; then
   exit
 fi
 
 train=$working/$id/step-1/good.clean.short
 test=$working/$id/step-1/bad.clean.short
 
-echo "[step-3] Start"
+echo "[iter-$iter] [step-3] Start"
 
 mkdir -p $working/$id/step-3
 mkdir -p $working/$id/step-3/feats
+mkdir -p $working/$id/step-3/feats/iter-$iter
 feats=$working/$id/step-3/feats
 
 good_string=
 bad_string=
 
-if [ $bow_feat = true ] && [ ! -f $working/$id/step-3/feats/bad.bow.e2f ]; then
-  $ROOT/scripts/run-bow.sh $config $f2e $train.$input $train.$output > $working/$id/step-3/feats/good.bow.f2e
-  $ROOT/scripts/run-bow.sh $config $e2f $train.$output $train.$input > $working/$id/step-3/feats/good.bow.e2f
+if [ $bow_feat = true ] && [ ! -f $working/$id/step-3/feats/iter-$iter/bad.bow.e2f ]; then
+  $ROOT/scripts/run-bow.sh $config $f2e $train.$input_lang $train.$output_lang > $working/$id/step-3/feats/iter-$iter/good.bow.f2e
+  $ROOT/scripts/run-bow.sh $config $e2f $train.$output_lang $train.$input_lang > $working/$id/step-3/feats/iter-$iter/good.bow.e2f
 
-  $ROOT/scripts/run-bow.sh $config $f2e $test.$input $train.$output > $working/$id/step-3/feats/bad.bow.f2e
-  $ROOT/scripts/run-bow.sh $config $e2f $test.$output $train.$input > $working/$id/step-3/feats/bad.bow.e2f
+  $ROOT/scripts/run-bow.sh $config $f2e $test.$input_lang $train.$output_lang > $working/$id/step-3/feats/iter-$iter/bad.bow.f2e
+  $ROOT/scripts/run-bow.sh $config $e2f $test.$output_lang $train.$input_lang > $working/$id/step-3/feats/iter-$iter/bad.bow.e2f
 fi
 
 if [ ! -f $feats/bad.length.ratio ]; then
@@ -72,8 +73,8 @@ if [ $pos_feat = true ]; then
 fi
 
 if [ $bow_feat = true ]; then
-  good_string="$good_string $feats/good.bow.f2e $feats/good.bow.e2f"
-  bad_string="$bad_string $feats/bad.bow.f2e $feats/bad.bow.e2f"
+  good_string="$good_string $feats/iter-$iter/good.bow.f2e $feats/iter-$iter/good.bow.e2f"
+  bad_string="$bad_string $feats/iter-$iter/bad.bow.f2e $feats/iter-$iter/bad.bow.e2f"
 fi
 
 if [ $length_feat = true ]; then
@@ -98,9 +99,9 @@ fi
 
 echo $good_string
 
-paste $good_string > $feats/good.feats
-paste $bad_string > $feats/bad.feats
+paste $good_string > $feats/iter-$iter/good.feats
+paste $bad_string > $feats/iter-$iter/bad.feats
 
-touch $working/$id/step-3/.done
+touch $working/$id/step-3/.done.$iter
 
-echo "[step-3] finished"
+echo "[iter-$iter] [step-3] finished"

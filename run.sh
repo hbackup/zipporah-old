@@ -34,9 +34,8 @@ mkdir -p $working/$id/LOGs
 echo "id=$id" > $working/$id/config
 cat $config >> $working/$id/config
 
-[ $stage -le 1 ] && ($ROOT/scripts/1.sh $working/$id/config & sleep 3m)
+[ $stage -le 1 ] && $ROOT/scripts/1.sh $working/$id/config
 [ $stage -le 2 ] && $ROOT/scripts/2.sh $working/$id/config
-wait
 
 [ $stage -le 3 ] && $ROOT/scripts/3.sh $working/$id/config
 [ $stage -le 4 ] && $ROOT/scripts/4.sh $working/$id/config

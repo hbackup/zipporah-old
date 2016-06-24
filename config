@@ -22,7 +22,7 @@ clust=/export/a11/hxu/tools/cluster-3.6.7/
 #==============================================================================
 input=fr
 output=en
-raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.fr-en
+raw_stem_good=1000000
 #clean_stem_good=
 #raw_stem_ref=/export/a11/hxu/sample_corpus/training/news-commentary-v8.de-en
 raw_stem_ref=$raw_stem_good
@@ -37,8 +37,8 @@ lang_pair=${input}-${output}
 # exsiting translation model path
 # if this is set, we will not process the *ref corpus
 #==============================================================================
-f2e=/export/a11/hxu/automatic/working/3/step-2/MT/model/lex.1.f2e
-e2f=/export/a11/hxu/automatic/working/3/step-2/MT/model/lex.1.e2f 
+f2e=
+e2f=
 
 #==============================================================================
 # features to use

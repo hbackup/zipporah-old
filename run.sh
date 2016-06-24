@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -lt 1 ] && [ $# -gt 3 ]; then
-  echo "usage: $0 config-file [id] [stage]"
+if [ $# -lt 1 ] && [ $# -gt 4 ]; then
+  echo "usage: $0 config-file [id] [iter stage]"
 fi
 
 config=$1
@@ -22,10 +22,12 @@ else
   id=$2
 fi
 
-stage=0
+cur_iter=1
+stage=1
 
-if [ $# -eq 3 ]; then
-  stage=$3
+if [ $# -eq 4 ]; then
+  cur_iter=$3
+  stage=$4
 fi
 
 mkdir -p $working/$id
@@ -36,10 +38,10 @@ for i in `seq 1 $num_iters`; do
   echo "iter=$i" >> $working/$id/config.$i
   cat $config >> $working/$id/config.$i
 
-  [ $stage -le 1 ] && $ROOT/scripts/1.sh $working/$id/config.$i
-  [ $stage -le 2 ] && $ROOT/scripts/2.sh $working/$id/config.$i
-  [ $stage -le 3 ] && $ROOT/scripts/3.sh $working/$id/config.$i
-  [ $stage -le 4 ] && $ROOT/scripts/4.sh $working/$id/config.$i
-  [ $stage -le 5 ] && $ROOT/scripts/5.sh $working/$id/config.$i
-  [ $stage -le 6 ] && $ROOT/scripts/6.sh $working/$id/config.$i
+  [ $cur_iter -le $i ] && [ $stage -le 1 ] && $ROOT/scripts/1.sh $working/$id/config.$i
+  [ $cur_iter -le $i ] && [ $stage -le 2 ] && $ROOT/scripts/2.sh $working/$id/config.$i
+  [ $cur_iter -le $i ] && [ $stage -le 3 ] && $ROOT/scripts/3.sh $working/$id/config.$i
+  [ $cur_iter -le $i ] && [ $stage -le 4 ] && $ROOT/scripts/4.sh $working/$id/config.$i
+  [ $cur_iter -le $i ] && [ $stage -le 5 ] && $ROOT/scripts/5.sh $working/$id/config.$i
+  [ $cur_iter -le $i ] && [ $stage -le 6 ] && $ROOT/scripts/6.sh $working/$id/config.$i
 done

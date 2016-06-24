@@ -34,8 +34,8 @@ paste $working/$id/step-6/iter-$iter/score.good $working/$id/step-6/iter-$iter/s
 
 for i in good bad diff; do
   head -n $k $working/$id/step-6/iter-$iter/$i/sorted | awk '{print $2}' > $working/$id/step-6/iter-$iter/$i/top.$k.index
-  $ROOT/tools/get-lines $working/$id/step-6/iter-$iter/$i/top.$k.index $working/$id/step-1/iter-$iter/bad.clean.short.$input > $working/$id/step-6/iter-$iter/$i/train.$input
-  $ROOT/tools/get-lines $working/$id/step-6/iter-$iter/$i/top.$k.index $working/$id/step-1/iter-$iter/bad.clean.short.$output > $working/$id/step-6/iter-$iter/$i/train.$output
+  $ROOT/tools/get-lines $working/$id/step-6/iter-$iter/$i/top.$k.index $working/$id/step-1/iter-$iter/bad.clean.short.$input_lang > $working/$id/step-6/iter-$iter/$i/train.$input_lang
+  $ROOT/tools/get-lines $working/$id/step-6/iter-$iter/$i/top.$k.index $working/$id/step-1/iter-$iter/bad.clean.short.$output_lang > $working/$id/step-6/iter-$iter/$i/train.$output_lang
 done
 
 touch $working/$id/step-6/.done.$iter

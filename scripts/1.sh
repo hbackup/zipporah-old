@@ -24,6 +24,8 @@ if [ ! -f $working/$id/step-1/bad.clean.short.$input_lang ]; then
   echo "[iter-$iter] [step-1] processing bad corpus"
   if [ -f $clean_stem_bad.$input_lang ] && [ -f $clean_stem_bad.$output_lang ]; then
     check_equal_lines $clean_stem_bad.$input_lang $clean_stem_bad.$output_lang
+    ln -s $clean_stem_bad.$input_lang $working/$id/step-1/bad.clean.$input_lang
+    ln -s $clean_stem_bad.$output_lang $working/$id/step-1/bad.clean.$output_lang
   else
     check_equal_lines $raw_stem_bad.$input_lang $raw_stem_bad.$output_lang
     for i in $input_lang $output_lang; do

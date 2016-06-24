@@ -28,7 +28,7 @@ raw_stem_good=1000000
 num_iters=2
 #clean_stem_good=
 
-raw_stem_bad=/export/a11/hxu/corpus/site-crawl-25
+clean_stem_bad=/export/a11/hxu/automatic/working/7/step-1/bad.clean
 
 output_percent=0.05 # as in number of lines
 lang_pair=${input_lang}-${output_lang}

@@ -25,7 +25,7 @@ raw_stem_good=1000000
 
 # if good corpus is a subset of bad corpus then in the first iteration we choose
 # a random subset and later pick the top-scored ones from the previous iteration
-num_iters=2
+num_iters=10
 #clean_stem_good=
 
 clean_stem_bad=/export/a11/hxu/automatic/working/7/step-1/bad.clean
@@ -75,7 +75,7 @@ else
 fi
 
 if ! [[ $raw_stem_good =~ ^[0-9]+$ ]]; then
-  num_iter=1
+  num_iters=1
 fi
   
 if [ "$num_gauss" == "" ]; then

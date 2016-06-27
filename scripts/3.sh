@@ -8,7 +8,7 @@ if [ -f $working/$id/step-3/.done.$iter ]; then
   exit
 fi
 
-train=$working/$id/step-1/good.clean.short
+train=$working/$id/step-1/iter-$iter/good.clean.short
 test=$working/$id/step-1/bad.clean.short
 
 echo "[iter-$iter] [step-3] Start"

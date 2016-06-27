@@ -38,10 +38,7 @@ for i in `seq 1 $num_iters`; do
   echo "iter=$i" >> $working/$id/config.$i
   cat $config >> $working/$id/config.$i
 
-  [ $cur_iter -le $i ] && [ $stage -le 1 ] && $ROOT/scripts/1.sh $working/$id/config.$i
-  [ $cur_iter -le $i ] && [ $stage -le 2 ] && $ROOT/scripts/2.sh $working/$id/config.$i
-  [ $cur_iter -le $i ] && [ $stage -le 3 ] && $ROOT/scripts/3.sh $working/$id/config.$i
-  [ $cur_iter -le $i ] && [ $stage -le 4 ] && $ROOT/scripts/4.sh $working/$id/config.$i
-  [ $cur_iter -le $i ] && [ $stage -le 5 ] && $ROOT/scripts/5.sh $working/$id/config.$i
-  [ $cur_iter -le $i ] && [ $stage -le 6 ] && $ROOT/scripts/6.sh $working/$id/config.$i
+  for j in `seq 1 6`; do
+    [[ $cur_iter -lt $i || ( $cur_iter -eq $i && $stage -le $j ) ]] && $ROOT/scripts/$j.sh $working/$id/config.$i
+  done
 done

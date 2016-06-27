@@ -44,22 +44,25 @@ fi
 echo "[iter-$iter] [step-1] processing good corpus"
 
 if [[ $raw_stem_good =~ ^[0-9]+$ ]]; then
-  mkdir -p $working/$id/step-1/iter-1
+  mkdir -p $working/$id/step-1/iter-$iter
   k=$raw_stem_good
-  n=`wc -l $working/$id/step-1/$c.clean.short.$input_lang | awk '{print $1}'`
+  n=`wc -l $working/$id/step-1/bad.clean.short.$input_lang | awk '{print $1}'`
 
   if [ $iter -eq 1 ]; then
     echo "[iter-1] [step-1] randomly chooose subset as good data"
     $ROOT/tools/get-rand-index $n $k > $working/$id/step-1/iter-1/good-index-random
-    $ROOT/tools/get-lines $working/$id/step-1/iter-1/good-index-random $working/$id/step-1/$c.clean.short.$input_lang > $working/$id/step-1/iter-1/good.clean.$input_lang
-    $ROOT/tools/get-lines $working/$id/step-1/iter-1/good-index-random $working/$id/step-1/$c.clean.short.$output_lang > $working/$id/step-1/iter-1/good.clean.$output_lang
+    $ROOT/tools/get-lines $working/$id/step-1/iter-1/good-index-random $working/$id/step-1/bad.clean.short.$input_lang > $working/$id/step-1/iter-1/good.clean.$input_lang
+    $ROOT/tools/get-lines $working/$id/step-1/iter-1/good-index-random $working/$id/step-1/bad.clean.short.$output_lang > $working/$id/step-1/iter-1/good.clean.$output_lang
   else
     echo "[iter-1] [step-1] pick best data from last iteration"
     head -n $k $working/$id/step-6/iter-$[$iter-1]/bad/sorted | awk '{print $2}' > $working/$id/step-1/iter-$iter/good-index
-    $ROOT/tools/get-lines $working/$id/step-1/iter-$iter/good-index-random $working/$id/step-1/$c.clean.short.$input_lang > $working/$id/step-1/iter-$iter/good.clean.$input_lang
-    $ROOT/tools/get-lines $working/$id/step-1/iter-$iter/good-index-random $working/$id/step-1/$c.clean.short.$output_lang > $working/$id/step-1/iter-$iter/good.clean.$output_lang
+    $ROOT/tools/get-lines $working/$id/step-1/iter-$iter/good-index $working/$id/step-1/bad.clean.short.$input_lang > $working/$id/step-1/iter-$iter/good.clean.$input_lang
+    $ROOT/tools/get-lines $working/$id/step-1/iter-$iter/good-index $working/$id/step-1/bad.clean.short.$output_lang > $working/$id/step-1/iter-$iter/good.clean.$output_lang
   fi
   clean_stem_good=$working/$id/step-1/iter-$iter/good.clean
+
+  ln -s $working/$id/step-1/iter-$iter/good.clean.$input_lang $working/$id/step-1/iter-$iter/good.clean.short.$input_lang
+  ln -s $working/$id/step-1/iter-$iter/good.clean.$output_lang $working/$id/step-1/iter-$iter/good.clean.short.$output_lang
 
 # no need to check anything now
   exit

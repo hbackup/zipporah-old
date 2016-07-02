@@ -10,25 +10,25 @@ fi
 
 echo "[iter-$iter] [step-4] Starts"
 
-mkdir -p $working/$id/step-4/
-mkdir -p $working/$id/step-4/feats
-mkdir -p $working/$id/step-4/feats/iter-$iter
-mkdir -p $working/$id/step-4/gmm-file
-mkdir -p $working/$id/step-4/gmm-file/iter-$iter
+base=$working/$id/iter-$iter/step-4
+old_feats=$working/$id/iter-$iter/step-3/feats
+feats=$base/feats
 
-feats=$working/$id/step-3/feats/iter-$iter
+mkdir -p $base
+mkdir -p $feats
+mkdir -p $base/gmm-file
 
 for i in good bad; do
   echo "[iter-$iter] [step-4] generate sample training data for $i corpus"
-  n=`wc -l $feats/$i.feats | awk '{print$1}'`
+  n=`wc -l $old_feats/$i.feats | awk '{print$1}'`
   k=$gmm_sample_size
 
-  $ROOT/tools/get-rand-index $n $k > $working/$id/step-4/feats/iter-$iter/$i.index
-  $ROOT/tools/get-lines $working/$id/step-4/feats/iter-$iter/$i.index $feats/good.feats > $working/$id/step-4/feats/iter-$iter/$i.feats
+  $ROOT/tools/get-rand-index $n $k > $feats/$i.index
+  $ROOT/tools/get-lines $feats/$i.index $old_feats/good.feats > $feats/$i.feats
 
   echo "[iter-$iter] [step-4] clustering GMM for $i data"
-  mkdir -p $working/$id/step-4/gmm-file/iter-$iter/$i
-  $ROOT/scripts/cluster-gmm.sh $config $working/$id/step-4/feats/iter-$iter/$i.feats $num_gauss $working/$id/step-4/gmm-file/iter-$iter/$i.params $working/$id/step-4/gmm-file/iter-$iter/$i
+  mkdir -p $base/gmm-file/$i
+  $ROOT/scripts/cluster-gmm.sh $config $feats/$i.feats $num_gauss $base/gmm-file/$i.params $base/gmm-file/$i
 
 done
 

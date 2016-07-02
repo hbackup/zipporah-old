@@ -49,6 +49,7 @@ e2f=
 #==============================================================================
 ngram_feat=true
 ngram_order=3
+pos_ngram_order=8
 word_count=10000
 
 bow_feat=true # probably the most important feature

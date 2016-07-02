@@ -4,7 +4,7 @@ config=$1
 
 . $config
 
-if [ -f $working/$id/step-4/.done.$iter ]; then
+if [ -f $working/$id/.done.$iter.4 ]; then
   exit
 fi
 
@@ -32,6 +32,6 @@ for i in good bad; do
 
 done
 
-touch $working/$id/step-4/.done.$iter
+touch $working/$id/.done.$iter.4
 
 echo "[iter-$iter] [step-4] finished"

@@ -11,6 +11,10 @@ ROOT=/export/a11/hxu/automatic/data-selection
 moses=/export/a11/hxu/mosesdecoder
 tagger=/export/a11/hxu/automatic/data-selection/external
 clust=/export/a11/hxu/tools/cluster-3.6.7/
+srilm=/export/a11/hxu/tools/srilm/bin/i686-m64
+
+num_gmms=1  # we might take several subsets of the data to train several GMMs
+            # and average the scores TODO(hxu)
 
 #==============================================================================
 # corpus
@@ -21,11 +25,11 @@ clust=/export/a11/hxu/tools/cluster-3.6.7/
 #==============================================================================
 input_lang=fr
 output_lang=en
-raw_stem_good=1000000
+raw_stem_good=2000000
 
 # if good corpus is a subset of bad corpus then in the first iteration we choose
 # a random subset and later pick the top-scored ones from the previous iteration
-num_iters=10
+num_iters=6
 #clean_stem_good=
 
 clean_stem_bad=/export/a11/hxu/automatic/working/7/step-1/bad.clean
@@ -43,12 +47,17 @@ e2f=
 #==============================================================================
 # features to use
 #==============================================================================
+ngram_feat=true
+ngram_order=3
+word_count=10000
+
 bow_feat=true # probably the most important feature
 bow_thresh=0.05 # only pick entries in lex table when prob >= thresh
                 # 1 means pick most likely translation
 
 pos_feat=true # need tagger
-pos_num=10 # only pick top pos_num most common tags for each language
+pos_num=5 # only pick top pos_num most common tags for each language
+pos_ngram_feat=true
 pos_sample=2000 
 pos_jobs=80
 
@@ -56,6 +65,8 @@ length_feat=true
 length_ratio=true
 
 non_word_agree=true
+
+ppl_feats=true  # log(ppl), TODO(hxu)
 
 #==============================================================================
 # GMM

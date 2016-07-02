@@ -43,8 +43,8 @@ fi
 
 echo "[iter-$iter] [step-1] processing good corpus"
 
+mkdir -p $working/$id/step-1/iter-$iter
 if [[ $raw_stem_good =~ ^[0-9]+$ ]]; then
-  mkdir -p $working/$id/step-1/iter-$iter
   k=$raw_stem_good
   n=`wc -l $working/$id/step-1/bad.clean.short.$input_lang | awk '{print $1}'`
 
@@ -70,18 +70,20 @@ fi
 
 if [ -f $clean_stem_good.$input_lang ] && [ -f $clean_stem_good.$output_lang ]; then
   check_equal_lines $clean_stem_good.$input_lang $clean_stem_good.$output_lang
+  ln -s $clean_stem_good.$input_lang $working/$id/step-1/iter-$iter/good.clean.$input_lang
+  ln -s $clean_stem_good.$output_lang $working/$id/step-1/iter-$iter/good.clean.$output_lang
 else
   check_equal_lines $raw_stem_good.$input_lang $raw_stem_good.$output_lang
   for i in $input_lang $output_lang; do
-    $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_good.$i $working/$id/step-1/good.clean.$i > $working/$id/LOGs/raw-to-clean-good.log &
+    $ROOT/scripts/lib/raw-to-clean.sh $config $i $raw_stem_good.$i $working/$id/step-1/iter-$iter/good.clean.$i > $working/$id/LOGs/raw-to-clean-good.log &
   done
   wait
 fi 
 
 for c in good; do
   $moses/scripts/training/clean-corpus-n.perl \
-    $working/$id/step-1/$c.clean $input_lang $output_lang \
-    $working/$id/step-1/$c.clean.short 1 80
+    $working/$id/step-1/iter-$iter/$c.clean $input_lang $output_lang \
+    $working/$id/step-1/iter-$iter/$c.clean.short 1 80
 done
 
 touch $working/$id/step-1/.done.$iter

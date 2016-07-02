@@ -21,6 +21,22 @@ feats=$working/$id/step-3/feats
 good_string=
 bad_string=
 
+if [ $ngram_feat = true ] && [ ! -f $working/$id/step-3/feats/iter-$iter/bad.ppl.$output_lang ]; then
+  for lang in $input_lang $output_lang; do
+    vocab=$working/$id/step-3/feats/iter-$iter/vocab.$lang
+    cat $train.$lang | awk '{for(i=1;i<=NF;i++)print$i}' | sort | uniq -c | sort -n -k1 -r | head -n $word_count | awk '{print$2}' > $vocab
+    echo Training LM for $lang
+    $srilm/ngram-count -order $ngram_order -vocab $vocab -text $train.$lang -lm $working/$id/step-3/feats/iter-$iter/lm.$lang -kndiscount
+
+    echo Scoring for $lang
+    $srilm/ngram -lm $working/$id/step-3/feats/iter-$iter/lm.$lang -order $ngram_order -ppl $train.$lang -debug 1 2>&1 \
+      | grep "ppl1=" | grep zeroprobs | grep logprob | head -n -1 | awk '{print log($6)}' > $working/$id/step-3/feats/iter-$iter/good.ppl.$lang
+
+    $srilm/ngram -lm $working/$id/step-3/feats/iter-$iter/lm.$lang -order $ngram_order -ppl $test.$lang -debug 1 2>&1 \
+      | grep "ppl1=" | grep zeroprobs | grep logprob | head -n -1 | awk '{print log($6)}' > $working/$id/step-3/feats/iter-$iter/bad.ppl.$lang
+  done
+fi
+
 if [ $bow_feat = true ] && [ ! -f $working/$id/step-3/feats/iter-$iter/bad.bow.e2f ]; then
   $ROOT/scripts/run-bow.sh $config $f2e $train.$input_lang $train.$output_lang > $working/$id/step-3/feats/iter-$iter/good.bow.f2e
   $ROOT/scripts/run-bow.sh $config $e2f $train.$output_lang $train.$input_lang > $working/$id/step-3/feats/iter-$iter/good.bow.e2f
@@ -63,13 +79,20 @@ if [ $pos_feat = true ] && [ ! -f $working/$id/step-3/feats/bad.pos ]; then
     done
   done
 
-  paste $working/$id/step-3/tagged/good.$input_lang.pos.count.ratio $working/$id/step-3/tagged/good.$output_lang.pos.count.ratio > $working/$id/step-3/feats/good.pos
+  paste $working/$id/step-3/tagged/good.$input_lang.pos.count.ratio $working/$id/step-3/tagged/good.$output_lang.pos.count.ratio > $working/$id/step-3/feats/iter-$iter/good.pos
   paste $working/$id/step-3/tagged/bad.$input_lang.pos.count.ratio $working/$id/step-3/tagged/bad.$output_lang.pos.count.ratio > $working/$id/step-3/feats/bad.pos
 fi
 
 if [ $pos_feat = true ]; then
-  good_string="$good_string $feats/good.pos"
-  bad_string="$bad_string $feats/bad.pos"
+  good_string="$good_string $feats/iter-$iter/good.pos"
+  bad_string="$bad_string $feats//bad.pos"
+fi
+
+if [ $ngram_feat = true ]; then
+  for lang in $input_lang $output_lang; do
+    good_string="$good_string $feats/iter-$iter/good.ppl.$lang"
+    bad_string="$bad_string $feats/iter-$iter/bad.ppl.$lang"
+  done
 fi
 
 if [ $bow_feat = true ]; then

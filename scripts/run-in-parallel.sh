@@ -28,7 +28,7 @@ for i in `seq -w $[$nj-1] -1 0`; do
   n=$[$n-1]
 done
 
-$ROOT/scripts/queue.pl JOB=1:$nj $tmpfolder/log.JOB $command $tmpfolder/s.JOB $tmpfolder/out.JOB
+$ROOT/scripts/queue.pl -l "hostname=b*" JOB=1:$nj $tmpfolder/log.JOB $command $tmpfolder/s.JOB $tmpfolder/out.JOB
 
 if [ -f $output ]; then
   rm $output

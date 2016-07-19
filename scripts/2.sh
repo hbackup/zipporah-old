@@ -4,6 +4,10 @@ config=$1
 
 . $config
 
+if [ $bow_feat = false ]; then
+  exit
+fi
+
 if [ ! -f $e2f ] || [ ! -f $f2e ]; then
   echo -n "[iter-$iter] [step-2] starts," && grep "^#2:" steps.info | awk -F ':' '{print $2}' 
 

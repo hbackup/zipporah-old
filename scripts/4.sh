@@ -11,7 +11,7 @@ fi
 echo "[iter-$iter] [step-4] Starts"
 
 base=$working/$id/iter-$iter/step-4
-old_feats=$working/$id/iter-$iter/step-3/feats
+old_feats=$working/$id/iter-$iter/feats
 feats=$base/feats
 
 mkdir -p $base

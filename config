@@ -2,8 +2,8 @@
 
 # locations
 #==============================================================================
-working=/export/a11/hxu/automatic/working
-ROOT=/export/a11/hxu/automatic/data-selection
+working=/export/a11/hxu/DS/working
+ROOT=/export/a11/hxu/DS/data-selection
 #==============================================================================
 
 # binaries
@@ -25,14 +25,15 @@ num_gmms=1  # we might take several subsets of the data to train several GMMs
 #==============================================================================
 input_lang=fr
 output_lang=en
-raw_stem_good=2000000
+#raw_stem_good=2000000
+raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.fr-en
 
 # if good corpus is a subset of bad corpus then in the first iteration we choose
 # a random subset and later pick the top-scored ones from the previous iteration
-num_iters=6
+num_iters=4
 #clean_stem_good=
 
-clean_stem_bad=/export/a11/hxu/automatic/working/7/step-1/bad.clean
+clean_stem_bad=/export/a11/hxu/DS/working/1/iter-1/step-1/bad.clean.short
 
 output_percent=0.05 # as in number of lines
 lang_pair=${input_lang}-${output_lang}
@@ -49,10 +50,10 @@ e2f=
 #==============================================================================
 ngram_feat=true
 ngram_order=3
-pos_ngram_order=8
+pos_ngram_order=5
 word_count=10000
 
-bow_feat=true # probably the most important feature
+bow_feat=false # probably the most important feature
 bow_thresh=0.05 # only pick entries in lex table when prob >= thresh
                 # 1 means pick most likely translation
 
@@ -73,7 +74,7 @@ ppl_feats=true  # log(ppl), TODO(hxu)
 # GMM
 #==============================================================================
 num_gauss=8
-gmm_sample_size=50000
+gmm_sample_size=80000
 
 #==============================================================================
 # Below here is automatic scripts. Do not change anything
@@ -82,8 +83,8 @@ if [ "$e2f" != "" ] && [ "$f2e" != "" ]; then
   raw_stem_ref=
   clean_stem_ref=
 else
-  e2f=$working/$id/step-2/MT/iter-$iter/model/lex.1.e2f
-  f2e=$working/$id/step-2/MT/iter-$iter/model/lex.1.f2e
+  e2f=$working/$id/iter-$iter/step-2/MT/model/lex.1.e2f
+  f2e=$working/$id/iter-$iter/step-2/MT/model/lex.1.f2e
 fi
 
 if ! [[ $raw_stem_good =~ ^[0-9]+$ ]]; then

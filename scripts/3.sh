@@ -40,11 +40,21 @@ if [ $ngram_feat = true ] && [ ! -f $feats/bad.ppl.$output_lang ]; then
 fi
 
 if [ $bow_feat = true ] && [ ! -f $feats/bad.bow.e2f ]; then
-  $ROOT/scripts/run-bow.sh $config $f2e $train.$input_lang $train.$output_lang > $feats/good.bow.f2e
-  $ROOT/scripts/run-bow.sh $config $e2f $train.$output_lang $train.$input_lang > $feats/good.bow.e2f
+  echo running bow
+  echo generate unigram counts
+  for l in $input_lang $output_lang; do
+    cat $train.$l | sed "s= =\n=g" | sort | uniq -c > $feats/unigram.$l
+  done
 
-  $ROOT/scripts/run-bow.sh $config $f2e $test.$input_lang $train.$output_lang >  $feats/bad.bow.f2e
-  $ROOT/scripts/run-bow.sh $config $e2f $test.$output_lang $train.$input_lang >  $feats/bad.bow.e2f
+  $ROOT/tools/lex-prune $f2e $bow_thresh > ${f2e}.pruned_$bow_thresh
+  $ROOT/tools/lex-prune $e2f $bow_thresh > ${e2f}.pruned_$bow_thresh
+
+  echo generate translation scores
+  $ROOT/scripts/run-bow-improved.sh $config $feats/unigram.$input_lang  $f2e.pruned_$bow_thresh $train.$input_lang $train.$output_lang > $feats/good.bow.f2e
+  $ROOT/scripts/run-bow-improved.sh $config $feats/unigram.$output_lang $e2f.pruned_$bow_thresh $train.$output_lang $train.$input_lang > $feats/good.bow.e2f
+
+  $ROOT/scripts/run-bow-improved.sh $config $feats/unigram.$input_lang  $f2e.pruned_$bow_thresh $test.$input_lang $train.$output_lang >  $feats/bad.bow.f2e
+  $ROOT/scripts/run-bow-improved.sh $config $feats/unigram.$output_lang $e2f.pruned_$bow_thresh $test.$output_lang $train.$input_lang >  $feats/bad.bow.e2f
 fi
 
 if [ ! -f $feats/bad.length.ratio ]; then

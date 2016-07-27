@@ -32,6 +32,34 @@ double ToDouble(string input) {
   return ans;
 }
 
+unordered_map<string, double> GetUnigram(istream &input) {
+  unordered_map<string, double> ans;
+  string word;
+  int count;
+  int total_count = 0;
+  while (input >> count >> word) {
+    ans[word] = count;
+    total_count += count;
+  }
+
+  for (unordered_map<string, double>::iterator iter = ans.begin();
+                                               iter != ans.end();
+                                               iter++) {
+    iter->second /= double(total_count);
+  }
+
+  // sanity check
+  double total_prob = 0.0;
+  for (unordered_map<string, double>::iterator iter = ans.begin();
+                                               iter != ans.end();
+                                               iter++) {
+    total_prob += iter->second;
+  }
+  assert(total_prob > 0.99 && total_prob < 1.01);
+
+  return ans;
+}
+
 unordered_map<string, vector<TransProb> > GetTable(istream &input) {
   unordered_map<string, vector<TransProb> > ans;
 
@@ -66,6 +94,7 @@ unordered_map<string, vector<TransProb> > GetTable(istream &input) {
 }
 
 void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
+                 const unordered_map<string, double> &unigram,
                  istream& input) {
   string line;
   int lines_processed = 0;
@@ -75,16 +104,18 @@ void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
 
     for (size_t i = 0; i < words.size(); i++) {
       const unordered_map<string, vector<TransProb> >::const_iterator
-                                         iter = table.find(words[i]);
+        iter = table.find(words[i]);
       if (iter == table.end()) {
         // OOV, words not apperaing in the lex
-        ans["OOOOOOOOV"] = ans["OOOOOOOOV"] + 1.0;
+//        ans["OOOOOOOOV"] = ans["OOOOOOOOV"] + 1.0;
         continue;
       }
+      double uni_prob = unigram[words[i]];
+
       const vector<TransProb>& t = iter->second;
 
       for (size_t j = 0; j < t.size(); j++) {
-        ans[t[j].word] += t[j].prob;
+        ans[t[j].word] += t[j].prob * uni_prob;
 //        cout << "adding proba " << t[j].prob << endl;
       }
     }
@@ -104,13 +135,16 @@ void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
 }
 
 int main(int argc, char** argv) {
-  if (argc != 3) {
-    cerr << argv[0] << " requires 3 parameters; got instead " << argc << endl;
+  if (argc != 4) {
+    cerr << argv[0] << "table-file unigram-counts file-to-translate" << endl
+         << endl
+         << argv[0] << " requires 3 parameters; got instead " << argc << endl;
     return -1;
   }
 
   string table_file = argv[1];
-  string file_to_translate = argv[2];
+  string unigram_count_file = argv[2];
+  string file_to_translate = argv[3];
 
   if (table_file == "-" && file_to_translate == "-") {
     cerr << "Can not have stdin for both inputs" << endl;
@@ -128,13 +162,18 @@ int main(int argc, char** argv) {
     table = GetTable(ifile);
   }
 
+  {
+    ifstream ifile(unigram_count_file);
+    unigram = GetUnigram(ifile);
+  }
+
   cerr << "# Starting Translation" << endl;
 
   if (file_to_translate == "-") {
-    DoTranslate(table, cin);
+    DoTranslate(table, unigram, cin);
   } else {
     ifstream ifile(file_to_translate);
-    DoTranslate(table, ifile);
+    DoTranslate(table, unigram, ifile);
   }
   return 0;
 }

@@ -4,6 +4,8 @@ config=$1
 
 . $config
 
+set -x
+
 if [ -f $working/$id/.done.$iter.4 ]; then
   exit
 fi
@@ -18,8 +20,10 @@ mkdir -p $base
 mkdir -p $feats
 mkdir -p $base/gmm-file
 
-for i in good bad; do
+#for i in good bad; do
+for i in bad; do
   echo "[iter-$iter] [step-4] generate sample training data for $i corpus"
+
   n=`wc -l $old_feats/$i.feats | awk '{print$1}'`
   k=$gmm_sample_size
 
@@ -28,7 +32,7 @@ for i in good bad; do
 
   echo "[iter-$iter] [step-4] clustering GMM for $i data"
   mkdir -p $base/gmm-file/$i
-  $ROOT/scripts/cluster-gmm.sh $config $feats/$i.feats $num_gauss $base/gmm-file/$i.params $base/gmm-file/$i
+  $gmm_clustering_script $config $feats/$i.feats $num_gauss $base/gmm-file/$i.params $base/gmm-file/$i
 
 done
 

@@ -11,10 +11,14 @@ ROOT=/export/a11/hxu/DS/data-selection
 moses=/export/a11/hxu/mosesdecoder
 tagger=/export/a11/hxu/automatic/data-selection/external
 clust=/export/a11/hxu/tools/cluster-3.6.7/
+kaldi=/export/a11/hxu/kaldi/
 srilm=/export/a11/hxu/tools/srilm/bin/i686-m64
 
-num_gmms=1  # we might take several subsets of the data to train several GMMs
-            # and average the scores TODO(hxu)
+gmm_clustering_script=$ROOT/scripts/cluster-gmm.sh
+gmm_scoring_script=$ROOT/script/score-gmm.sh
+
+gmm_clustering_script=$ROOT/scripts/cluster-gmm-kaldi.sh
+gmm_scoring_script=$ROOT/script/score-gmm-kaldi.sh
 
 #==============================================================================
 # corpus
@@ -30,12 +34,12 @@ raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.fr-en
 
 # if good corpus is a subset of bad corpus then in the first iteration we choose
 # a random subset and later pick the top-scored ones from the previous iteration
-num_iters=4
+num_iters=4 # TODO not sure if keep this
 #clean_stem_good=
 
 clean_stem_bad=/export/a11/hxu/DS/working/1/iter-1/step-1/bad.clean.short
 
-output_percent=0.05 # as in number of lines
+output_words=50000000 # as in number of lines
 lang_pair=${input_lang}-${output_lang}
 
 #==============================================================================
@@ -67,8 +71,6 @@ length_feat=true
 length_ratio=true
 
 non_word_agree=true
-
-ppl_feats=true  # log(ppl), TODO(hxu)
 
 #==============================================================================
 # GMM

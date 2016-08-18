@@ -4,6 +4,8 @@ if [ $# -lt 1 ] && [ $# -gt 4 ]; then
   echo "usage: $0 config-file [id] [iter stage]"
 fi
 
+set -e
+
 config=$1
 id=
 

@@ -28,7 +28,7 @@ for i in bad; do
   k=$gmm_sample_size
 
   $ROOT/tools/get-rand-index $n $k > $feats/$i.index
-  $ROOT/tools/get-lines $feats/$i.index $old_feats/good.feats > $feats/$i.feats
+  $ROOT/tools/get-lines $feats/$i.index $old_feats/$i.feats > $feats/$i.feats
 
   echo "[iter-$iter] [step-4] clustering GMM for $i data"
   mkdir -p $base/gmm-file/$i

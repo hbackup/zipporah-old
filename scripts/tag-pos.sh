@@ -28,6 +28,7 @@ if [ -f $tagger/stanford-postagger.sh ]; then
     iconv -c -f utf-8 -t ISO-8859-1 $stem.de | sed "s=^ *$=ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ=g" > $working/$id/iter-$iter/step-3/$file.de.iso
     $ROOT/scripts/run-in-parallel.sh "$tagger/stanford-postagger.sh $model" $working/$id/iter-$iter/step-3/$file.de.iso $outputfile $pos_jobs $working/$id/iter-$iter/step-3/tagged/tmp/$file.$lang/ $ROOT
   fi
+
   exit
 fi
 

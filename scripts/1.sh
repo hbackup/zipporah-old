@@ -17,7 +17,7 @@ if [ -f $working/$id/.done.$iter.1 ]; then
 fi
 
 base=$working/$id/iter-$iter/step-1
-[ -d $base ] && rm $base -r
+#[ -d $base ] && rm $base -r
 mkdir -p $working/$id/iter-$iter
 mkdir -p $base
 

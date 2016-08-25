@@ -1,7 +1,8 @@
 #!/bin/bash
 
-if [ $# -lt 1 ] && [ $# -gt 4 ]; then
+if [ $# -lt 1 ] || [ $# -gt 4 ]; then
   echo "usage: $0 config-file [id] [iter stage]"
+  exit 1
 fi
 
 set -e

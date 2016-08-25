@@ -77,6 +77,7 @@ non_word_agree=true
 #==============================================================================
 num_gauss=8
 gmm_sample_size=80000
+num_iters_gmm=40
 
 #==============================================================================
 # Below here is automatic scripts. Do not change anything

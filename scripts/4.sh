@@ -27,6 +27,10 @@ for i in bad; do
   n=`wc -l $old_feats/$i.feats | awk '{print$1}'`
   k=$gmm_sample_size
 
+  if [ $k == -1 ]; then
+    k=$n
+  fi
+
   $ROOT/tools/get-rand-index $n $k > $feats/$i.index
   $ROOT/tools/get-lines $feats/$i.index $old_feats/$i.feats > $feats/$i.feats
 

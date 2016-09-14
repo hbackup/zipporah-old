@@ -29,6 +29,8 @@ done
 
 sh install-tagger.sh
 
+tar -zxvf tree-tagger-linux-3.2.tar.gz  #TODO(hxu)
+
 exit
 
 mkdir -p models

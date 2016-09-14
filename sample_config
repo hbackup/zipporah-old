@@ -32,11 +32,6 @@ output_lang=en
 #raw_stem_good=2000000
 raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.fr-en
 
-# if good corpus is a subset of bad corpus then in the first iteration we choose
-# a random subset and later pick the top-scored ones from the previous iteration
-num_iters=4 # TODO not sure if keep this
-#clean_stem_good=
-
 clean_stem_bad=/export/a11/hxu/DS/working/1/iter-1/step-1/bad.clean.short
 
 output_words=50000000 # as in number of lines
@@ -82,18 +77,7 @@ num_iters_gmm=40
 #==============================================================================
 # Below here is automatic scripts. Do not change anything
 #==============================================================================
-if [ "$e2f" != "" ] && [ "$f2e" != "" ]; then
-  raw_stem_ref=
-  clean_stem_ref=
-else
-  e2f=$working/$id/iter-$iter/step-2/MT/model/lex.1.e2f
-  f2e=$working/$id/iter-$iter/step-2/MT/model/lex.1.f2e
-fi
 
-if ! [[ $raw_stem_good =~ ^[0-9]+$ ]]; then
-  num_iters=1
-fi
-  
 if [ "$num_gauss" == "" ]; then
   num_gauss=8
 fi

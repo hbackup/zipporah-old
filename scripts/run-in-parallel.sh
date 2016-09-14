@@ -17,7 +17,7 @@ file=`basename $c | sed "s=\..*$==g"`
 echo log file should be called $file.log
 
 mkdir -p $tmpfolder
-split -d -n l/$nj $input $tmpfolder/s.
+split -a 3 -d -n l/$nj $input $tmpfolder/s.
 
 n=$[$nj]
 for i in `seq -w $[$nj-1] -1 0`; do

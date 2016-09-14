@@ -2,44 +2,28 @@
 
 config=$1
 
+set -e
+
 . $config
 
-set -x
-
-if [ -f $working/$id/.done.$iter.4 ]; then
+if [ -f $working/$id/.done.4 ]; then
   exit
 fi
 
-echo "[iter-$iter] [step-4] Starts"
+echo "[step-4] Starts"
 
-base=$working/$id/iter-$iter/step-4
-old_feats=$working/$id/iter-$iter/feats
-feats=$base/feats
-
+base=$working/$id/step-4
 mkdir -p $base
-mkdir -p $feats
-mkdir -p $base/gmm-file
 
-#for i in good bad; do
-for i in bad; do
-  echo "[iter-$iter] [step-4] generate sample training data for $i corpus"
+echo "[step-4] score on good GMM"
 
-  n=`wc -l $old_feats/$i.feats | awk '{print$1}'`
-  k=$gmm_sample_size
+echo "[step-4] the next lines should be equal"
 
-  if [ $k == -1 ]; then
-    k=$n
-  fi
+#$gmm_scoring_script $config $working/$id/step-4/gmm-file/good.params $working/$id/feats/bad.feats $working/$id/feats/good.tmp | tee $base/score.good | wc -l
+wc -l $working/$id/feats/bad.feats
 
-  $ROOT/tools/get-rand-index $n $k > $feats/$i.index
-  $ROOT/tools/get-lines $feats/$i.index $old_feats/$i.feats > $feats/$i.feats
+$gmm_scoring_script $config $working/$id/step-3/gmm-file/bad.params $working/$id/feats/bad.feats $working/$id/feats/bad.tmp | tee $base/score.bad | wc -l
 
-  echo "[iter-$iter] [step-4] clustering GMM for $i data"
-  mkdir -p $base/gmm-file/$i
-  $gmm_clustering_script $config $feats/$i.feats $num_gauss $base/gmm-file/$i.params $base/gmm-file/$i
+touch $working/$id/.done.4
 
-done
-
-touch $working/$id/.done.$iter.4
-
-echo "[iter-$iter] [step-4] finished"
+echo "[step-4] finished"

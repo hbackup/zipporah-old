@@ -18,7 +18,7 @@ fi
 
 #set -v
 
-tmp=$working/$id/iter-$iter/step-1/tmp
+tmp=$working/$id/step-1/tmp
 mkdir -p $tmp
 (
 $moses/scripts/tokenizer/tokenizer.perl -l $lang \

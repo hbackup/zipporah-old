@@ -23,6 +23,34 @@ mkdir -p $feats
 good_string=
 bad_string=
 
+#if [ -f $additional_feat ]; then
+#  bad_string="$bad_string $additional_feat"
+#fi
+
+if [ $align_feat = true ] && [ ! -f $feats/bad.align ]; then
+  echo aligning good corpus
+  scripts/align-corpus.sh $config $train.$output_lang $train.$input_lang $feats/good.align.raw $feats/align.tmp.good/ 100
+
+  echo aligning bad corpus
+  scripts/align-corpus.sh $config $test.$output_lang $test.$input_lang $feats/bad.align.raw $feats/align.tmp.bad/ 500
+
+  echo re-generating the corpus based on the alignment results
+  for i in good bad; do
+    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $1}' > $feats/$i.$output_lang
+    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $2}' > $feats/$i.$input_lang
+    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $3}' > $feats/$i.align
+  done
+
+fi
+
+if [ $align_feat = true ]; then
+  good_string="$good_string $feats/good.align"
+  bad_string="$bad_string $feats/bad.align"
+  train=$feats/good
+  test=$feats/bad
+  wc -l $train $test $good_string $bad_string
+fi
+
 if [ $ngram_feat = true ] && [ ! -f $feats/bad.ppl.$output_lang ]; then
   for lang in $input_lang $output_lang; do
     vocab=$base/vocab.$lang

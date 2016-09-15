@@ -13,6 +13,8 @@ tagger=/export/a11/hxu/automatic/data-selection/external
 clust=/export/a11/hxu/tools/cluster-3.6.7/
 kaldi=/export/a11/hxu/kaldi/
 srilm=/export/a11/hxu/tools/srilm/bin/i686-m64
+aligner=/export/b01/hxu/data-selection/aligner/hunalign/src/hunalign/hunalign
+dict=/home/pkoehn/statmt/project/mtma_bitext/dicts/en-fr.dic
 
 gmm_clustering_script=$ROOT/scripts/cluster-gmm.sh
 gmm_scoring_script=$ROOT/script/score-gmm.sh
@@ -22,15 +24,10 @@ gmm_scoring_script=$ROOT/script/score-gmm-kaldi.sh
 
 #==============================================================================
 # corpus
-# good corpus - to extract features and train a GMM;
-# if it's a number then select a subset of that size from bad corpus
-
-# bad corpus - the corpus which we try to select a good subset
 #==============================================================================
 input_lang=fr
 output_lang=en
-#raw_stem_good=2000000
-raw_stem_good=/home/pkoehn/statmt/data/wmt15/training/europarl-v7.fr-en
+raw_stem_good=2000000
 
 clean_stem_bad=/export/a11/hxu/DS/working/1/iter-1/step-1/bad.clean.short
 
@@ -38,15 +35,11 @@ output_words=50000000 # as in number of lines
 lang_pair=${input_lang}-${output_lang}
 
 #==============================================================================
-# exsiting translation model path
-# if this is set, we will not process the *ref corpus
-#==============================================================================
-f2e=
-e2f=
-
-#==============================================================================
 # features to use
 #==============================================================================
+
+align_feat=true
+
 ngram_feat=true
 ngram_order=3
 pos_ngram_order=5

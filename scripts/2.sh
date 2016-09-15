@@ -48,7 +48,7 @@ if [ $align_feat = true ]; then
   bad_string="$bad_string $feats/bad.align"
   train=$feats/good
   test=$feats/bad
-  wc -l $train $test $good_string $bad_string
+  wc -l $train.?? $test.?? $good_string $bad_string
 fi
 
 if [ $ngram_feat = true ] && [ ! -f $feats/bad.ppl.$output_lang ]; then

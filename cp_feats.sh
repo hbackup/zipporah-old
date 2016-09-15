@@ -18,10 +18,9 @@ if [ -d $to ]; then
 fi
 
 mkdir $to
-mkdir $to/iter-1
 
-cd $to/iter-1
+cd $to/
 
-ln -s ../../$from/iter-1/step-1
-ln -s ../../$from/iter-1/step-2
-ln -s ../../$from/iter-1/step-3
+ln -s ../$from/step-1
+ln -s ../$from/step-2
+ln -s ../$from/feats

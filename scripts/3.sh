@@ -12,6 +12,8 @@ fi
 
 echo "[step-3] Starts"
 
+echo id is $id
+
 base=$working/$id/step-3
 old_feats=$working/$id/feats
 feats=$base/feats

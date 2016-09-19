@@ -13,22 +13,21 @@ echo "[step-5] Starts"
 
 base=$working/$id/step-5
 mkdir -p $base
-#mkdir -p $base/good
+mkdir -p $base/good
 mkdir -p $base/bad
 
-#[ ! -f $base/score.good ] && cat $working/$id/step-5/score.good > $base/score.good
+[ ! -f $base/score.good ] && cat $working/$id/step-4/score.good > $base/score.good
 [ ! -f $base/score.bad ] && cat $working/$id/step-4/score.bad  > $base/score.bad
 
 
 #echo "[step-5] generating the subset that is most similar to the good data"
-#[ ! -f $base/good/sorted ] && cat $base/score.good | awk '{print $1, NR-1}' | sort -n -r -k1 > $base/good/sorted
+[ ! -f $base/good/sorted ] && cat $base/score.good | awk '{print $1, NR-1}' | sort -n -r -k1 > $base/good/sorted
 
 [ ! -f $base/bad/sorted ] && cat $base/score.bad  | awk '{print $1, NR-1}' | sort -n -r -k1 > $base/bad/sorted
 
 for k in $output_words; do
-#for i in bad good; do
-  echo "[step-5] generating the subset that is most concentrated in the bad data"
-  for i in bad; do
+  for i in good bad; do
+    echo "[step-5] generating the subset that is most similar to the $i data"
     cat $base/$i/sorted | awk '{print $2}' > $base/$i/index
 
     [ ! -f $working/$id/step-1/bad.clean.short.pasted ] && \
@@ -53,7 +52,6 @@ for k in $output_words; do
 
   rm -f $working/$id/train.??
   rm -f $working/$id/rand.??
-
 done
 
 for k in $output_words; do

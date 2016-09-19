@@ -34,6 +34,7 @@ $kaldi/src/fgmmbin/fgmm-global-acc-stats --binary=false $savefolder/gmm.params.f
 
 for i in `seq 1 $num_iters_gmm`; do
   $kaldi/src/fgmmbin/fgmm-global-est $savefolder/gmm.params.fgmm.$[$i-1] $savefolder/acc $savefolder/gmm.params.fgmm.$i
+#  $kaldi/src/fgmmbin/fgmm-global-est --mix-up=$[$num_gauss+$i+$i] $savefolder/gmm.params.fgmm.$[$i-1] $savefolder/acc $savefolder/gmm.params.fgmm.$i
 done
 
 cp $savefolder/gmm.params.fgmm.$num_iters_gmm $out_param

@@ -22,8 +22,8 @@ mkdir -p $base
 mkdir -p $feats
 mkdir -p $base/gmm-file
 
-#for i in good bad; do
-for i in bad; do
+for i in good bad; do
+#for i in bad; do
   echo "[step-3] generate sample training data for $i corpus"
 
   n=`wc -l $old_feats/$i.feats | awk '{print$1}'`

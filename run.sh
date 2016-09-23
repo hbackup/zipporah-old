@@ -45,6 +45,6 @@ mkdir -p $working/$id/LOGs
       cat $config >> $working/$id/config
 #  )
 
-  for j in `seq 1 5`; do
+  for j in `seq 1 6`; do
     [ $stage -le $j ] && $ROOT/scripts/$j.sh $working/$id/config
   done

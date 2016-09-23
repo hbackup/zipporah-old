@@ -38,7 +38,10 @@ def main():
   file1 = argv.pop(0)
   file2 = argv.pop(0)
 
-  f1 = open(file1, 'r')
+  if file1 == '-':
+    f1 = sys.stdin
+  else:
+    f1 = open(file1, 'r')
   f2 = open(file2, 'r')
 
   for line1 in f1:

@@ -35,7 +35,7 @@ if [ ! -f $working/$id/step-1/bad.clean.short.$input_lang ]; then
   for c in bad; do
     $moses/scripts/training/clean-corpus-n.perl \
       $working/$id/step-1/$c.clean $input_lang $output_lang \
-      $working/$id/step-1/$c.clean.short 6 80
+      $working/$id/step-1/$c.clean.short 6 80 $working/$id/step-1/lines-retained
   done
 fi
 

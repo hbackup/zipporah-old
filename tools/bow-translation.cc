@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <assert.h>
 
 using namespace std;
 
@@ -29,34 +30,6 @@ double ToDouble(string input) {
   stringstream ss(input);
   double ans = 0;
   ss >> ans;
-  return ans;
-}
-
-unordered_map<string, double> GetUnigram(istream &input) {
-  unordered_map<string, double> ans;
-  string word;
-  int count;
-  int total_count = 0;
-  while (input >> count >> word) {
-    ans[word] = count;
-    total_count += count;
-  }
-
-  for (unordered_map<string, double>::iterator iter = ans.begin();
-                                               iter != ans.end();
-                                               iter++) {
-    iter->second /= double(total_count);
-  }
-
-  // sanity check
-  double total_prob = 0.0;
-  for (unordered_map<string, double>::iterator iter = ans.begin();
-                                               iter != ans.end();
-                                               iter++) {
-    total_prob += iter->second;
-  }
-  assert(total_prob > 0.99 && total_prob < 1.01);
-
   return ans;
 }
 
@@ -94,7 +67,6 @@ unordered_map<string, vector<TransProb> > GetTable(istream &input) {
 }
 
 void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
-                 const unordered_map<string, double> &unigram,
                  istream& input) {
   string line;
   int lines_processed = 0;
@@ -110,12 +82,11 @@ void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
 //        ans["OOOOOOOOV"] = ans["OOOOOOOOV"] + 1.0;
         continue;
       }
-      double uni_prob = unigram[words[i]];
 
       const vector<TransProb>& t = iter->second;
 
       for (size_t j = 0; j < t.size(); j++) {
-        ans[t[j].word] += t[j].prob * uni_prob;
+        ans[t[j].word] += t[j].prob;
 //        cout << "adding proba " << t[j].prob << endl;
       }
     }
@@ -135,16 +106,15 @@ void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
 }
 
 int main(int argc, char** argv) {
-  if (argc != 4) {
-    cerr << argv[0] << "table-file unigram-counts file-to-translate" << endl
+  if (argc != 3) {
+    cerr << argv[0] << " table-file file-to-translate" << endl
          << endl
          << argv[0] << " requires 3 parameters; got instead " << argc << endl;
     return -1;
   }
 
   string table_file = argv[1];
-  string unigram_count_file = argv[2];
-  string file_to_translate = argv[3];
+  string file_to_translate = argv[2];
 
   if (table_file == "-" && file_to_translate == "-") {
     cerr << "Can not have stdin for both inputs" << endl;
@@ -162,18 +132,13 @@ int main(int argc, char** argv) {
     table = GetTable(ifile);
   }
 
-  {
-    ifstream ifile(unigram_count_file);
-    unigram = GetUnigram(ifile);
-  }
-
   cerr << "# Starting Translation" << endl;
 
   if (file_to_translate == "-") {
-    DoTranslate(table, unigram, cin);
+    DoTranslate(table, cin);
   } else {
     ifstream ifile(file_to_translate);
-    DoTranslate(table, unigram, ifile);
+    DoTranslate(table, ifile);
   }
   return 0;
 }

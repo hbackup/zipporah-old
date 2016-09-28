@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <math.h> 
 
 using namespace std;
 
@@ -62,8 +63,11 @@ void Normalize(map<string, double> &d) {
       continue;
     }
     normalizer += iter->second;
+//    normalizer += iter->second * iter->second;
     iter++;
   }
+
+//  normalizer = sqrt(normalizer);
 
   if (normalizer < min_total_count) {
     d.clear();

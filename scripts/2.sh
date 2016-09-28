@@ -27,23 +27,35 @@ bad_string=
 #  bad_string="$bad_string $additional_feat"
 #fi
 
-if [ $align_feat = true ] && [ ! -f $feats/bad.align ]; then
-  echo aligning good corpus
-  scripts/align-corpus.sh $config $train.$output_lang $train.$input_lang $feats/good.align.raw $feats/align.tmp.good/ 100
+if [ $bow_feat = true ] && [ ! -f $feats/bad.bow.$input_lang-$output_lang ]; then
+  echo getting BoW features
+  echo using dictionary $e2f and $f2e
 
-  echo aligning bad corpus
-  scripts/align-corpus.sh $config $test.$output_lang $test.$input_lang $feats/bad.align.raw $feats/align.tmp.bad/ 500
-
-  echo re-generating the corpus based on the alignment results
-  for i in good bad; do
-    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $1}' > $feats/$i.$output_lang
-    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $2}' > $feats/$i.$input_lang
-    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $3}' > $feats/$i.align
-  done
+  cat $test.$input_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$output_lang > $feats/bad.bow.$input_lang-$output_lang
+  cat $test.$output_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$input_lang > $feats/bad.bow.$output_lang-$input_lang
+  
+  cat $train.$input_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$output_lang > $feats/good.bow.$input_lang-$output_lang
+  cat $train.$output_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$input_lang > $feats/good.bow.$output_lang-$input_lang
 
 fi
 
-if [ $align_feat = true ]; then
+#if [ $align_feat = true ] && [ ! -f $feats/bad.align ]; then
+#  echo aligning good corpus
+#  scripts/align-corpus.sh $config $train.$output_lang $train.$input_lang $feats/good.align.raw $feats/align.tmp.good/ 100
+#
+#  echo aligning bad corpus
+#  scripts/align-corpus.sh $config $test.$output_lang $test.$input_lang $feats/bad.align.raw $feats/align.tmp.bad/ 500
+#
+#  echo re-generating the corpus based on the alignment results
+#  for i in good bad; do
+#    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $1}' > $feats/$i.$output_lang
+#    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $2}' > $feats/$i.$input_lang
+#    cat $feats/$i.align.raw | awk -F '\t' '($1!="" && $2!=""){print $3}' > $feats/$i.align
+#  done
+#
+#fi
+
+if [ "$align_feat" = true ]; then
   good_string="$good_string $feats/good.align"
   bad_string="$bad_string $feats/bad.align"
   train=$feats/good
@@ -161,8 +173,8 @@ if [ $ngram_feat = true ]; then
 fi
 
 if [ $bow_feat = true ]; then
-  good_string="$good_string $feats/good.bow.f2e $feats/good.bow.e2f"
-  bad_string="$bad_string $feats/bad.bow.f2e $feats/bad.bow.e2f"
+  good_string="$good_string $feats/good.bow.$input_lang-$output_lang $feats/good.bow.$output_lang-$input_lang"
+  bad_string="$bad_string $feats/bad.bow.$input_lang-$output_lang $feats/bad.bow.$output_lang-$input_lang"
 fi
 
 if [ $length_feat = true ]; then

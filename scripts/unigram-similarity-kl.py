@@ -9,28 +9,32 @@ def similarity(sent1, sent2):
   words1 = sent1.split()
   words2 = sent2.split()
 
-#  total_length = len(words1) / 2 + len(words2)
+  count1 = {}
 
-  count = {}
-
+  normalizer1 = 0.0
   for i in range(len(words1) / 2):
     word = words1[2 * i]
     c = words1[2 * i + 1]
-    if word in count:
-      count[word] = count[word] + c
-    else:
-      count[word] = float(c)
+    count1[word] = count1.get(word, 0) + float(c)
+    normalizer1 = normalizer1 + float(c)
+
+  count2 = {}
+  normalizer2 = 0.0
+  for word in words2:
+    count2[word] = count2.get(word, 0) + 1.0
+    normalizer2 = normalizer2 + 1.0
 
   ans = 0
 
-  count2 = {}
-  for word in words2:
-    count2[word] = count2.get(word, 0) + 1
-
   for word in count2:
-    ans = ans + (count2[word] - count.get(word, 0)) * (count2[word] - count.get(word, 0))
+#    ans = ans + (count2[word] - count1.get(word, 0)) * (count2[word] - count1.get(word, 0))
+    ans = ans + (count2[word] / normalizer2) * math.log((count2[word] / normalizer2) / ((count1.get(word, 0) / normalizer1) + 0.000000000001))
 
-  return ans / len(words2)
+#    length2 = length2 + count2[word] * count2[word]
+#  length2 = math.sqrt(length2)
+#  print "lengths are ", length1, length2
+
+  return ans
 
 def main():
   argv = sys.argv[1:]

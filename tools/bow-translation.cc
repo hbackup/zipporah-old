@@ -74,19 +74,22 @@ void DoTranslate(const unordered_map<string, vector<TransProb> >&table,
     map<string, double> ans;
     vector<string> words = Split(line);
 
+    int n_words = words.size();
+    n_words = 1; // not normalizing here...
     for (size_t i = 0; i < words.size(); i++) {
       const unordered_map<string, vector<TransProb> >::const_iterator
         iter = table.find(words[i]);
       if (iter == table.end()) {
         // OOV, words not apperaing in the lex
 //        ans["OOOOOOOOV"] = ans["OOOOOOOOV"] + 1.0;
+        ans[words[i]] += 1.0 / n_words;
         continue;
       }
 
       const vector<TransProb>& t = iter->second;
 
       for (size_t j = 0; j < t.size(); j++) {
-        ans[t[j].word] += t[j].prob;
+        ans[t[j].word] += t[j].prob / n_words;
 //        cout << "adding proba " << t[j].prob << endl;
       }
     }

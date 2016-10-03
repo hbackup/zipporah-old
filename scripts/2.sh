@@ -31,8 +31,8 @@ if [ $bow_feat = true ] && [ ! -f $feats/bad.bow.$input_lang-$output_lang ]; the
   echo getting BoW features
   echo using dictionary $e2f and $f2e
 
-  cat $test.$input_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$output_lang > $feats/bad.bow.$input_lang-$output_lang
-  cat $test.$output_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$input_lang > $feats/bad.bow.$output_lang-$input_lang
+  cat $test.$input_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$output_lang > $feats/bad.bow.$input_lang-$output_lang &
+  cat $test.$output_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$input_lang > $feats/bad.bow.$output_lang-$input_lang &
   
   cat $train.$input_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$output_lang > $feats/good.bow.$input_lang-$output_lang
   cat $train.$output_lang | $ROOT/tools/bow-translation $f2e - | python $ROOT/scripts/unigram-similarity-kl.py - $test.$input_lang > $feats/good.bow.$output_lang-$input_lang
@@ -197,6 +197,8 @@ echo $bad_string
 
 feats=$working/$id/feats/
 mkdir -p $feats
+
+wait
 
 paste $good_string > $feats/good.feats
 paste $bad_string > $feats/bad.feats

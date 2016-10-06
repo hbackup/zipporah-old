@@ -1,34 +1,43 @@
 #!/bin/bash
 
 config=$1
-
-set -e
-
 . $config
 
-if [ -f $working/$id/.done.4 ]; then
-  exit
-fi
+oldbase=$working/$id/step-3/
+base=$working/$id/step-4/
 
-echo "[step-4] Starts"
-
-base=$working/$id/step-4
 mkdir -p $base
 
-echo "[step-4] score on good GMM"
+echo merging with ngram-weight = $ngram_weight
+paste $oldbase/bad.bow.* $oldbase/bad.ppl.?? | \
+        awk -v w=$ngram_weight '{print $1+$2+w*($3+$4)}' > $base/scores
 
-echo "[step-4] the next lines should be equal"
+cat $base/scores | awk '{print NR-1, $1}' | sort -k2n | tee $base/NR.scores.sorted | \
+      awk '{print $1}' > $base/sorted.index
 
-$gmm_scoring_script $config $working/$id/step-3/gmm-file/good.params $working/$id/feats/bad.feats $working/$id/feats/good.tmp | tee $base/score.good | wc -l
-wc -l $working/$id/feats/bad.feats
 
-$gmm_scoring_script $config $working/$id/step-3/gmm-file/bad.params $working/$id/feats/bad.feats $working/$id/feats/bad.tmp | tee $base/score.bad | wc -l
+for k in $output_words; do
+  echo "[step-4] doing data selection based on the scores, selecting $k words"
 
-#TODO(hxu)
+  i=good
+  mkdir -p $base/$i
+  [ ! -f $working/$id/step-1/bad.clean.short.pasted ] && \
+    paste $working/$id/step-1/bad.clean.short.$input_lang $working/$id/step-1/bad.clean.short.$output_lang > $working/$id/step-1/bad.clean.short.pasted
 
-#mv $base/score.bad $base/score.bad.original
-#paste $base/score.bad.original $working/$id/feats/bad.feats | awk '{if($2>0.8)print $1;else print -111111}' > $base/score.bad
+  $ROOT/tools/get-lines-by-words $base/sorted.index $working/$id/step-1/bad.clean.short.pasted $k > $base/$i/train$k.pasted
 
-touch $working/$id/.done.4
+  cat $base/$i/train$k.pasted | awk -F '\t' '{print $1}' > $base/$i/train.$k.$input_lang
+  cat $base/$i/train$k.pasted | awk -F '\t' '{print $2}' > $base/$i/train.$k.$output_lang
 
-echo "[step-4] finished"
+  echo "[step-4] generating a random subset for comparison"
+
+  mkdir -p $base/rand/
+  cat $base/sorted.index | shuf > $base/rand/index
+  for i in rand; do
+    $ROOT/tools/get-lines-by-words $base/$i/index $working/$id/step-1/bad.clean.short.pasted $k > $base/$i/train$k.pasted
+
+    cat $base/$i/train$k.pasted | awk -F '\t' '{print $1}' > $base/$i/train.$k.$input_lang
+    cat $base/$i/train$k.pasted | awk -F '\t' '{print $2}' > $base/$i/train.$k.$output_lang
+  done
+
+done

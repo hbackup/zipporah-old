@@ -2,77 +2,51 @@
 
 # locations
 #==============================================================================
-working=/export/a11/hxu/DS/working
-ROOT=/export/a11/hxu/DS/data-selection
+working=/export/b01/hxu/zipporah/working
+ROOT=/export/b01/hxu/zipporah/zipporah
 #==============================================================================
 
 # binaries
 #==============================================================================
 moses=/export/a11/hxu/mosesdecoder
-tagger=/export/a11/hxu/automatic/data-selection/external
-clust=/export/a11/hxu/tools/cluster-3.6.7/
-kaldi=/export/a11/hxu/kaldi/
 srilm=/export/a11/hxu/tools/srilm/bin/i686-m64
-aligner=/export/b01/hxu/data-selection/aligner/hunalign/src/hunalign/hunalign
-dict=/home/pkoehn/statmt/project/mtma_bitext/dicts/en-fr.dic
 
-gmm_clustering_script=$ROOT/scripts/cluster-gmm.sh
-gmm_scoring_script=$ROOT/script/score-gmm.sh
+aligner=fast-align
+align_job=50
+alignment= #if this is set then no need to run the aligner
 
-gmm_clustering_script=$ROOT/scripts/cluster-gmm-kaldi.sh
-gmm_scoring_script=$ROOT/script/score-gmm-kaldi.sh
+dict_count_thresh=1
 
 #==============================================================================
 # corpus
 #==============================================================================
-input_lang=fr
+input_lang=de
 output_lang=en
-raw_stem_good=2000000
-
-clean_stem_bad=/export/a11/hxu/DS/working/1/iter-1/step-1/bad.clean.short
-
-output_words=50000000 # as in number of lines
 lang_pair=${input_lang}-${output_lang}
+
+clean_stem_bad=/export/b01/hxu/data-selection/working/7/step-1/bad.clean.short
+clean_stem_good=/export/b01/hxu/data-selection/sample_experiments/de-en/corpus/project-syndicate.truecased.1
+
+output_words="500 1000000 2000000 5000000 10000000 20000000 50000000 100000000 200000000 500000000" # as in number of lines
 
 #==============================================================================
 # features to use
 #==============================================================================
 
-align_feat=true
+bow_constant=0.00001
+bow_jobs=100
 
-ngram_feat=true
 ngram_order=3
-pos_ngram_order=5
 word_count=10000
 
-bow_feat=false # probably the most important feature
-bow_thresh=0.05 # only pick entries in lex table when prob >= thresh
-                # 1 means pick most likely translation
-
-pos_feat=true # need tagger
-pos_num=5 # only pick top pos_num most common tags for each language
-pos_ngram_feat=true
-pos_sample=2000 
-pos_jobs=80
-
-length_feat=true
-length_ratio=true
-
-non_word_agree=true
-
-#==============================================================================
-# GMM
-#==============================================================================
-num_gauss=8
-gmm_sample_size=80000
-num_iters_gmm=40
+ngram_weight=1
 
 #==============================================================================
 # Below here is automatic scripts. Do not change anything
 #==============================================================================
 
-if [ "$num_gauss" == "" ]; then
-  num_gauss=8
-fi
-
 set -e
+
+if [ "$ngram_weight" == "" ]; then
+  ngram_weight=1
+fi

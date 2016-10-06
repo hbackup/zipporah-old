@@ -14,7 +14,7 @@ config=$1
 base=$working/$id/step-1
 #[ -d $base ] && rm $base -r
 mkdir -p $working/$id
-mkdir -p $base
+#mkdir -p $base
 
 echo -n "[step-1] starts," && grep "^#1:" steps.info | awk -F ':' '{print $2}'
 
@@ -40,6 +40,24 @@ if [ ! -f $working/$id/step-1/bad.clean.short.$input_lang ]; then
 fi
 
 echo "[step-1] processing good corpus"
+
+if [[ $raw_stem_good =~ ^[0-9]+$ ]]; then
+  k=$raw_stem_good
+  n=`wc -l $working/$id/step-1/bad.clean.short.$input_lang | awk '{print $1}'`
+
+  echo "[step-1] randomly chooose subset as good data"
+  $ROOT/tools/get-rand-index $n $k > $base/good-index-random
+  $ROOT/tools/get-lines $base/good-index-random $base/bad.clean.short.$input_lang  > $base/good.clean.$input_lang
+  $ROOT/tools/get-lines $base/good-index-random $base/bad.clean.short.$output_lang > $base/good.clean.$output_lang
+
+  clean_stem_good=$base/good.clean
+  ln -s $clean_stem_good.$input_lang $clean_stem_good.short.$input_lang
+  ln -s $clean_stem_good.$output_lang $clean_stem_good.short.$output_lang
+
+# no need to check anything now
+  exit
+fi
+
 if [ -f $clean_stem_good.$input_lang ] && [ -f $clean_stem_good.$output_lang ]; then
   check_equal_lines $clean_stem_good.$input_lang $clean_stem_good.$output_lang
   ln -s $clean_stem_good.$input_lang  $base/good.clean.$input_lang

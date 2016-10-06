@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int min_count = 50;
+int min_count = 500;
 int min_total_count = 500;
 
 void Output(map<string, map<string, double> > d, ofstream& ofile) {
@@ -94,9 +94,15 @@ void Normalize(map<string, map<string, double> >& d) {
 int main(int argc, char **argv) {
   int i = 1;
 
-  if (argc != 6) {
-    cout << argv[0] << " en_file fr_file align_file out_dict1 out_dict2" << endl;
+  if (argc != 7) {
+    cout << argv[0] << "min_count en_file fr_file align_file out_dict1 out_dict2" << endl;
     return -1;
+  }
+
+  string min_count_str = argv[i++];
+  {
+    stringstream ss(min_count_str);
+    ss >> min_count;
   }
 
   string en_file = argv[i++];
@@ -116,7 +122,7 @@ int main(int argc, char **argv) {
   
   int cur_line = 0;
   while (getline(en, en_line)) {
-    if (cur_line % 1000 == 0) {
+    if (cur_line % 10000 == 0) {
       cout << "processing line " << cur_line << endl;
     }
     cur_line++;

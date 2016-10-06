@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export LC_ALL=C
-export LANGUAGE=C
-
 if [ $# -lt 1 ] || [ $# -gt 3 ]; then
   echo "usage: $0 config-file [id] [stage]"
   exit 1
@@ -45,6 +42,6 @@ mkdir -p $working/$id/LOGs
       cat $config >> $working/$id/config
 #  )
 
-  for j in `seq 1 6`; do
+  for j in `seq 1 4`; do
     [ $stage -le $j ] && $ROOT/scripts/$j.sh $working/$id/config
   done

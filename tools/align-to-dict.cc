@@ -7,8 +7,8 @@
 
 using namespace std;
 
-int min_count = 500;
-int min_total_count = 500;
+int min_count = 5;
+int min_total_count = 100;
 
 void Output(map<string, map<string, double> > d, ofstream& ofile) {
   for (map<string, map<string, double> >::iterator iter = d.begin();

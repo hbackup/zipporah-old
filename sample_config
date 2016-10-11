@@ -11,9 +11,14 @@ ROOT=/export/b01/hxu/zipporah/zipporah
 moses=/export/a11/hxu/mosesdecoder
 srilm=/export/a11/hxu/tools/srilm/bin/i686-m64
 
+
 aligner=fast-align
 align_job=50
 alignment= #if this is set then no need to run the aligner
+
+# if the dictionaries are set then no need for alignment
+f2e=
+e2f=
 
 dict_count_thresh=1
 

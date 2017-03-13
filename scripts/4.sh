@@ -39,5 +39,4 @@ for k in $output_words; do
     cat $base/$i/train$k.pasted | awk -F '\t' '{print $1}' > $base/$i/train.$k.$input_lang
     cat $base/$i/train$k.pasted | awk -F '\t' '{print $2}' > $base/$i/train.$k.$output_lang
   done
-
 done

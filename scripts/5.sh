@@ -24,19 +24,21 @@ mkdir -p $working/$id/step-5/$i
 
 #tac $working/$id/step-4/sorted.index > $working/$id/step-5/reversed.index
 
+bad_url_count=100000
+
+tail -n $bad_url_count $working/$id/step-4/sorted.index > $working/$id/step-5/$i/r.index.$bad_url_count
+
+$ROOT/tools/get-lines $working/$id/step-5/$i/r.index.$bad_url_count $url_bad | uniq | sort -u > $working/$id/step-5/bad_urls
+
+$ROOT/tools/select-by-url $working/$id/step-5/bad_urls \
+  $working/$id/step-1/bad.clean.short.pasted $working/$id/step-4/scores \
+  $working/$id/step-5/urls \
+  $working/$id/step-5/clean.pasted $working/$id/step-5/score
+
+cat $working/$id/step-5/score | awk '{print NR-1,$1}' \
+   | sort -k2n | awk '{print $1}' > $working/$id/step-5/clean.index
+
 for k in $output_words; do
-  tail -n 1 $working/$id/step-4/sorted.index > $working/$id/step-5/$i/r.index.1000000
-
-  $ROOT/tools/get-lines $working/$id/step-5/$i/r.index.1000000 $url_bad | uniq | sort -u > $working/$id/step-5/bad_urls
-
-  $ROOT/tools/select-by-url $working/$id/step-5/bad_urls \
-    $working/$id/step-1/bad.clean.short.pasted $working/$id/step-4/scores \
-    $working/$id/step-5/urls \
-    $working/$id/step-5/clean.pasted $working/$id/step-5/score
-
-  cat $working/$id/step-5/score | awk '{print NR-1,$1}' \
-   | sort -k2 -nr | awk '{print $1}' > $working/$id/step-5/clean.index
-
   $ROOT/tools/get-lines-by-words $working/$id/step-5/clean.index \
     $working/$id/step-5/clean.pasted $k > $working/$id/step-5/clean.pasted.$k
 
